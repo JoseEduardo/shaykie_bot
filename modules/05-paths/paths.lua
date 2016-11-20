@@ -86,6 +86,8 @@ end
 
 function PathsModule.createPath(posToWalk)
   table.insert(PathsToWalk, posToWalk)
+
+  PathsModule.addToPathList(posToWalk);
 end
 
 function PathsModule.terminate()
@@ -115,13 +117,50 @@ end
 function PathsModule.loadUI(panel)
   UI = {
     AutoExplore = panel:recursiveGetChildById('AutoExplore'),
-    PathMap = panel:recursiveGetChildById('PathMap')
+    PathMap = panel:recursiveGetChildById('PathMap'),
+    PathList = panel:recursiveGetChildById('PathList')
   }
 
   -- Load image resources
   UI.Images = {
     g_ui.createWidget("NodeImage", UI.PathMap)
   }
+end
+
+function PathsModule.addToPathList(target)
+  local item = g_ui.createWidget('ListRowComplex', UI.PathList)
+  item:setText(postostring(target))
+  item:setTextAlign(AlignLeft)
+  item:setId(#UI.PathList:getChildren()+1)
+  item.target = target
+
+  local removeButton = item:getChildById('remove')
+  connect(removeButton, {
+    onClick = function(button)
+      if removeTargetWindow then return end
+
+      local row = button:getParent()
+      local targetName = row:getText()
+
+      local yesCallback = function()
+        row:destroy()
+        TargetsModule.removeTarget(targetName)
+        removeTargetWindow:destroy()
+        removeTargetWindow=nil
+      end
+      local noCallback = function()
+        removeTargetWindow:destroy()
+        removeTargetWindow=nil
+      end
+
+      removeTargetWindow = displayGeneralBox(tr('Remove'), 
+        tr('Remove '..targetName..'?'), {
+        { text=tr('Yes'), callback=yesCallback },
+        { text=tr('No'), callback=noCallback },
+        anchor=AnchorHorizontalCenter}, yesCallback, noCallback)
+    end
+  })
+
 end
 
 function PathsModule.unloadUI()

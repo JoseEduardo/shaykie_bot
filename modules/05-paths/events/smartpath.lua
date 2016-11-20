@@ -118,8 +118,6 @@ function SmartPath.checkPathing(dirs, override, dontChange)
     end
   end
 
---alterei aqui
-
   if countTable(PathsToWalk) > 0 then
     if currIndex > countTable(PathsToWalk)-1 then
       currIndex = 0
