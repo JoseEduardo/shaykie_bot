@@ -8,6 +8,7 @@ PathsModule = {}
 -- load module events
 dofiles('events')
 
+PathsToWalk = {}
 local Panel = {}
 local UI = {}
 
@@ -53,12 +54,6 @@ function PathsModule.init()
   -- register module
   Modules.registerModule(PathsModule)
 
-  --[[local gameRootPanel = modules.game_interface.getRootPanel()
-  g_keyboard.bindKeyPress('Alt+Left', function() UI.PathMap:move(1,0) end, gameRootPanel)
-  g_keyboard.bindKeyPress('Alt+Right', function() UI.PathMap:move(-1,0) end, gameRootPanel)
-  g_keyboard.bindKeyPress('Alt+Up', function() UI.PathMap:move(0,1) end, gameRootPanel)
-  g_keyboard.bindKeyPress('Alt+Down', function() UI.PathMap:move(0,-1) end, gameRootPanel)]]
-
   connect(g_game, {
     onGameStart = PathsModule.online,
     onGameEnd = PathsModule.offline,
@@ -74,7 +69,9 @@ function PathsModule.init()
 
   modules.game_interface.addMenuHook("pathing", tr("Add Path"), 
     function(menuPosition, lookThing, useThing, creatureThing)
-      local gamemap = gameRootPanel:recursiveGetChildByPos(mousePosition, false)
+      local gameRootPanel = modules.game_interface.getRootPanel()
+      local gamemap = gameRootPanel:recursiveGetChildByPos(menuPosition, false)
+
       if gamemap:getClassName() == 'UIGameMap' then
         PathsModule.createPath(gamemap:getPosition(menuPosition))
       end
@@ -85,6 +82,10 @@ function PathsModule.init()
 
   -- event inits
   SmartPath.init()
+end
+
+function PathsModule.createPath(posToWalk)
+  table.insert(PathsToWalk, posToWalk)
 end
 
 function PathsModule.terminate()
@@ -104,12 +105,6 @@ function PathsModule.terminate()
   disconnect(LocalPlayer, {
     onPositionChange = PathsModule.updateCameraPosition
   })
-
-  --[[local gameRootPanel = modules.game_interface.getRootPanel()
-  g_keyboard.unbindKeyPress('Alt+Left', gameRootPanel)
-  g_keyboard.unbindKeyPress('Alt+Right', gameRootPanel)
-  g_keyboard.unbindKeyPress('Alt+Up', gameRootPanel)
-  g_keyboard.unbindKeyPress('Alt+Down', gameRootPanel)]]
 
   -- event terminates
   SmartPath.terminate()

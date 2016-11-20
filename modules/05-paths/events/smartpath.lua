@@ -7,6 +7,8 @@
   TODO: Rewrite this entirely.
 ]]
 
+local currIndex = 0;
+
 PathsModule.SmartPath = {}
 SmartPath = PathsModule.SmartPath
 
@@ -37,8 +39,32 @@ function SmartPath.onStopped()
   
 end
 
+function getWalkPosByIndex(pos)
+  local index = 0;
+  local returnItem = nil;
+  for key,value in pairs(PathsToWalk) do
+    if index == pos then
+      returnItem = value
+      break
+    end
+    index = index+1;
+  end
+  
+  return returnItem
+end
+
+function countTable(t)
+  local count = 0
+  for key,value in pairs(t) do
+    count = count+1
+  end
+
+  return count
+end
+
 function SmartPath.checkPathing(dirs, override, dontChange)
   BotLogger.debug("SmartPath.checkPathing called")
+
   -- Check if we are performing other bot tasks
   if AutoLoot.isLooting() then
     BotLogger.debug("SmartPath: return 0")
@@ -92,23 +118,40 @@ function SmartPath.checkPathing(dirs, override, dontChange)
     end
   end
 
-  local tile = SmartPath.getBestWalkableTile(player, SmartPath.lastDir, override)
-  if tile then
-    local destPos = tile:getPosition()
-    BotLogger.debug("SmartPath: player:autoWalk: " .. postostring(destPos))
+--alterei aqui
+
+  if countTable(PathsToWalk) > 0 then
+    if currIndex > countTable(PathsToWalk)-1 then
+      currIndex = 0
+    end
+
     player:stopAutoWalk()
-    if player:autoWalk(destPos) then
-      SmartPath.lastDest.pos = destPos
+    if player:autoWalk(getWalkPosByIndex(currIndex)) then
+      BotLogger.debug("Success walk: "..currIndex)
       SmartPath.lastDest.time = currentTime
     end
-  elseif not dontChange then
-    SmartPath.changeDirection(PathFindResults.NoWay)
-    return false
+    currIndex = currIndex+1
+  else
+    local tile = SmartPath.getBestWalkableTile(player, SmartPath.lastDir, override)
+    if tile then
+      local destPos = tile:getPosition()
+      BotLogger.debug("SmartPath: player:autoWalk: " .. postostring(destPos))
+      player:stopAutoWalk()
+      if player:autoWalk(destPos) then
+        SmartPath.lastDest.pos = destPos
+        SmartPath.lastDest.time = currentTime
+      end
+    elseif not dontChange then
+      SmartPath.changeDirection(PathFindResults.NoWay)
+      return false
+    end
   end
+
   return true
 end
 
 function SmartPath.changeDirection(lastWalkResult, tries)
+
   BotLogger.debug("SmartPath.changeDirection")
   local tries = tries or 0
   local newDir = math.random(North, NorthWest)
