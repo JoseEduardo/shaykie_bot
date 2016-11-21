@@ -133,7 +133,8 @@ function PathsModule.loadUI(panel)
     SaveNameEdit = panel:recursiveGetChildById('SaveNameEdit'),
     LoadList = panel:recursiveGetChildById('LoadList'),
     LoadButton = panel:recursiveGetChildById('LoadButton'),
-    Minimap = panel:recursiveGetChildById('PathMap')
+    Minimap = panel:recursiveGetChildById('PathMap'),
+    TextAction = panel:recursiveGetChildById('actionText')
   }
 
   -- Load image resources
@@ -254,6 +255,10 @@ print(focusedChild:getText())
     end
   })
 
+end
+
+function PathsModule.setCurrentPath(pathSelected)
+  UI_Path.TextAction:setText(selectedTarget:getCommand(), true)
 end
 
 function PathsModule.getPaths(name)
