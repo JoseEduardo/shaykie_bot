@@ -89,7 +89,11 @@ function PathsModule.init()
 end
 
 function PathsModule.createPath(posToWalk)
-  PathsModule.addToPathList(posToWalk);
+  local path = Path.create()
+  path.setTarget(posToWalk)
+  path.setCommand("")
+
+  PathsModule.addToPathList(path);
 end
 
 function PathsModule.terminate()
@@ -138,38 +142,40 @@ function PathsModule.loadUI(panel)
   }
 end
 
-function PathsModule.addToPathList(target)
+function PathsModule.addToPathList(pathTarget)
+  local pathPos = pathTarget.target
+
   local item = g_ui.createWidget('ListRowComplex', UI_Path.PathList)
-  item:setText(postostring(target))
+  item:setText(postostring(pathPos))
   item:setTextAlign(AlignLeft)
   item:setId(#UI_Path.PathList:getChildren()+1)
-  item.target = target
+  item.path = pathTarget
 
-  UI_Path.Minimap:addFlag(target, 1, "teste")
+  UI_Path.Minimap:addFlag(pathPos, 1, "teste")
 
   local removeButton = item:getChildById('remove')
   connect(removeButton, {
     onClick = function(button)
-      if removeTargetWindow then return end
+      if removePathWindow then return end
 
       local row = button:getParent()
-      local targetName = row:getText()
+      local pathName = row:getText()
 
       local yesCallback = function()
         row:destroy()
-        removeTargetWindow:destroy()
-        removeTargetWindow=nil
+        removePathWindow:destroy()
+        removePathWindow=nil
         -- trtar aqui para pegar a pos certa e tirar do map
-        UI_Path.Minimap:removeFlag(row.target, 1, "")
+        UI_Path.Minimap:removeFlag(row.path.target, 1, "")
       end
 
       local noCallback = function()
-        removeTargetWindow:destroy()
-        removeTargetWindow=nil
+        removePathWindow:destroy()
+        removePathWindow=nil
       end
 
-      removeTargetWindow = displayGeneralBox(tr('Remove'), 
-        tr('Remove '..targetName..'?'), {
+      removePathWindow = displayGeneralBox(tr('Remove'), 
+        tr('Remove '..pathName..'?'), {
         { text=tr('Yes'), callback=yesCallback },
         { text=tr('No'), callback=noCallback },
         anchor=AnchorHorizontalCenter}, yesCallback, noCallback)
@@ -243,7 +249,7 @@ function writePaths(config)
 
   local t = UI_Path.PathList:getChildren()
   for k,v in pairs(t) do
-    paths[k] = v.target
+    paths[k:getName()] = v:toNode()
   end
 
   config:setNode('Paths', paths)
@@ -392,12 +398,14 @@ function parsePaths(config)
   -- loop each target node
   local index = 1
   for k,v in pairs(config:getNode("Paths")) do
-    PathsModule.addToPathList(v)
-    --paths[index] = target
+    local path = Path.create()
+    Path:parseNode(v)
+    paths[index] = path
     index = index + 1
   end
 
   return paths
+
 end
 
 return PathsModule

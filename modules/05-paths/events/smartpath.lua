@@ -46,7 +46,7 @@ function getWalkPosByIndex(pos)
 
   for i,v in ipairs(t) do
     if index == pos then
-      returnItem = v
+      returnItem = v.path
       break
     end
     index = index+1;
@@ -123,15 +123,14 @@ function SmartPath.checkPathing(dirs, override, dontChange)
   end
 
   if countTable() > 0 then
-
     if currIndex > countTable()-1 then
       currIndex = 0
     end
 
     player:stopAutoWalk()
-    local posWalk = getWalkPosByIndex(currIndex).target
+    local posWalk = getWalkPosByIndex(currIndex)
     
-    if player:autoWalk( posWalk ) then
+    if player:autoWalk( posWalk.target ) then
       BotLogger.debug("Success walk: ".. postostring(posWalk) )
       SmartPath.lastDest.time = currentTime
     end
