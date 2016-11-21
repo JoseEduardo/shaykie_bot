@@ -241,7 +241,29 @@ function PathsModule.bindHandlers()
       end
     })
 
+  connect(UI_Path.PathList, {
+    onChildFocusChange = function(self, focusedChild)
+      if focusedChild == nil then return end
+--VALIDAR AQUI O Q RETORNA NNO CLICK
+--VALIDAR TBM O QUE ESTA INDO PRO setCurrentPath
+print(focusedChild:getText())
+      selectedTarget = PathsModule.getPaths(focusedChild:getText())
+      if selectedTarget then
+        PathsModule.setCurrentPath(selectedTarget:getSetting(1))
+      end
+    end
+  })
+
 end
+
+function PathsModule.getPaths(name)
+  local t = UI_Path.PathList:getChildren()
+  for _,child in pairs(t) do
+    local t = child.path
+    if t and t:getName() == name then return t end
+  end
+end
+
 
 function writePaths(config)
   if not config then return end

@@ -62,9 +62,21 @@ Panel
     border: 2 black
     vertical-scrollbar: miniwindowScrollBar
 
+    MultilineTextEdit
+      id: actionText
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 50
+      text-wrap: true
+
     PathMap
       id: PathMap
-      anchors.fill: parent
+      anchors.top: prev.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      anchors.left: parent.left
+      height: 50
       autowalk: false
 
   BotOptionCheckBox
