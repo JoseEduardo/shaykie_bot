@@ -42,9 +42,11 @@ end
 function getWalkPosByIndex(pos)
   local index = 0;
   local returnItem = nil;
-  for key,value in pairs(PathsToWalk) do
+  local t = UI_Path.PathList:getChildren()
+
+  for i,v in ipairs(t) do
     if index == pos then
-      returnItem = value
+      returnItem = v
       break
     end
     index = index+1;
@@ -53,9 +55,11 @@ function getWalkPosByIndex(pos)
   return returnItem
 end
 
-function countTable(t)
+function countTable()
   local count = 0
-  for key,value in pairs(t) do
+  local t = UI_Path.PathList:getChildren()
+
+  for i,v in ipairs(t) do
     count = count+1
   end
 
@@ -118,16 +122,20 @@ function SmartPath.checkPathing(dirs, override, dontChange)
     end
   end
 
-  if countTable(PathsToWalk) > 0 then
-    if currIndex > countTable(PathsToWalk)-1 then
+  if countTable() > 0 then
+
+    if currIndex > countTable()-1 then
       currIndex = 0
     end
 
     player:stopAutoWalk()
-    if player:autoWalk(getWalkPosByIndex(currIndex)) then
-      BotLogger.debug("Success walk: "..currIndex)
+    local posWalk = getWalkPosByIndex(currIndex).target
+    
+    if player:autoWalk( posWalk ) then
+      BotLogger.debug("Success walk: ".. postostring(posWalk) )
       SmartPath.lastDest.time = currentTime
     end
+    
     currIndex = currIndex+1
   else
     local tile = SmartPath.getBestWalkableTile(player, SmartPath.lastDir, override)
