@@ -8,17 +8,31 @@ end
 
 Path = extends(CandyConfig, "Path")
 
-Path.create = function(target, command)
+Path.create = function(target, command, name)
   local path = Path.internalCreate()
 
   path.nodes = {}
   path.target = target or {}
   path.command = command or ""
+  path.name = name or "new"
 
   return path
 end
 
 -- gets/sets
+
+function Path:getName()
+  return self.name
+end
+
+function Path:setName(name)
+  local oldName = self.name
+  if name ~= oldName then
+    self.name = name
+
+    signalcall(self.onNameChange, self, name, oldName)
+  end
+end
 
 function Path:getTarget()
   return self.target
@@ -66,15 +80,10 @@ end
 function Path:toNode()
   local node = CandyConfig.toNode(self)
 
-  -- complex nodes
-
-  if self.settings then
-    node.settings = {}
-    for i,setting in pairs(self.settings) do
-      if setting then
-        node.settings[i] = setting:toNode()
-      end
-    end
+  if self.target then
+    setting = self.target
+    print(setting)
+    node.target = setting
   end
 
   return node
@@ -83,13 +92,10 @@ end
 function Path:parseNode(node)
   CandyConfig.parseNode(self, node)
 
-  -- complex parse
-  if node.settings then
-    self.settings = {}
-    for k,v in pairs(node.settings) do
-      local setting = Path.create(self)
-      setting:parseNode(v)
-      self.settings[tonumber(k)] = setting
-    end
+  if node.target then
+    self.target = node.target
+    self.command = node.command
+    self.name = node.name
   end
+
 end

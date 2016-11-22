@@ -54,29 +54,26 @@ Panel
     $!on:
       width: 0
 
+  MultilineTextEdit
+    id: actionText
+    anchors.top: PathListScrollBar.top
+    anchors.left: PathListScrollBar.right
+    anchors.right: parent.right
+    height: 50
+    text-wrap: true
+
   ScrollablePanel
     anchors.left: PathListScrollBar.right
     anchors.right: parent.right
-    anchors.top: PathList.top
+    anchors.top: actionText.bottom
     anchors.bottom: PathList.bottom
     border: 2 black
+    margin-top: 10
     vertical-scrollbar: miniwindowScrollBar
-
-    MultilineTextEdit
-      id: actionText
-      anchors.top: parent.top
-      anchors.left: parent.left
-      anchors.right: parent.right
-      height: 50
-      text-wrap: true
 
     PathMap
       id: PathMap
-      anchors.top: prev.top
-      anchors.bottom: parent.bottom
-      anchors.right: parent.right
-      anchors.left: parent.left
-      height: 50
+      anchors.fill: parent
       autowalk: false
 
   BotOptionCheckBox
