@@ -155,7 +155,7 @@ MainWindow
   Panel
     anchors.left: botContent.left
     anchors.right: botContent.right
-    anchors.top: botContent.bottom
+    anchors.top: hideButton.top
     anchors.bottom: hideButton.top
     margin-top: 5
     margin-bottom: 5
