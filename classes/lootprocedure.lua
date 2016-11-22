@@ -8,7 +8,7 @@ end
 
 LootProcedure = extends(Procedure, "LootProcedure")
 
-LootProcedure.create = function(id, position, corpse, timeoutTicks)
+LootProcedure.create = function(id, position, corpse, lootlist, timeoutTicks)
   local proc = LootProcedure.internalCreate()
 
   proc:setId(id) -- used for creature id
@@ -29,7 +29,8 @@ LootProcedure.create = function(id, position, corpse, timeoutTicks)
   proc.container = nil
   proc.items = nil
   proc.moveProc = nil
-  
+  proc.lootList = lootlist
+
   return proc
 end
 
@@ -180,13 +181,24 @@ function LootProcedure:takeNextItem()
   end
 end
 
+function LootProcedure:checkLootList(id)
+  if string.find( self.lootList, id..";" ) then
+    return true
+  else
+    return false
+  end
+end
+
 function LootProcedure:getBestItem()
   local data = {item=nil, z=nil}
   for k,i in pairs(self.items) do
     if not data.item or (i and i:getPosition().z < data.z) then
-      data.item = i
-      data.z = i:getPosition().z
-      BotLogger.debug("Found best item: ".. i:getId())
+      local checkItem = self:checkLootList(i:getId())
+      if checkItem then
+        data.item = i
+        data.z = i:getPosition().z
+        BotLogger.debug("Found best item: ".. i:getId())
+      end
     end
   end
   return data.item
