@@ -101,8 +101,7 @@ function AutoLoot.lootNext()
 
   if data.loot and player:getFreeCapacity() > 0 then
     AutoLoot.lootProc = LootProcedure.create(data.creatureId, 
-      data.loot.position, data.loot.corpse, "3268;3355;3577")
-    
+      data.loot.position, data.loot.corpse, TargetsModule.getLootList())
     -- Loot procedure finished
     connect(AutoLoot.lootProc, { onFinished = function(id)
       AutoLoot.removeLoot(id)

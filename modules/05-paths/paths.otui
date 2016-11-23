@@ -54,9 +54,16 @@ Panel
     $!on:
       width: 0
 
+  Label
+    id: actionLabel
+    !text: tr('Action')
+    anchors.top: PathListScrollBar.top
+    anchors.left: PathListScrollBar.left
+    margin-left: 15
+
   MultilineTextEdit
     id: actionText
-    anchors.top: PathListScrollBar.top
+    anchors.top: prev.bottom
     anchors.left: PathListScrollBar.right
     anchors.right: parent.right
     height: 50

@@ -142,7 +142,7 @@ MainWindow
     anchors.top: botTabBar.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    height: 330
+    height: 480
     image-source: /images/ui/panel_content
     image-color: #ffffff99
     padding-left: 9

@@ -23,6 +23,9 @@ local loadWindow
 local removeTargetWindow
 local removeFileWindow
 
+function TargetsModule.getLootList() 
+  return UI.LootListText:getText()
+end
 function TargetsModule.getPanel() return Panel end
 function TargetsModule.setPanel(panel) Panel = panel end
 function TargetsModule.getUI() return UI end
@@ -121,6 +124,7 @@ function TargetsModule.loadUI(panel)
     SettingDangerBox = panel:recursiveGetChildById('SettingDangerBox'),
     SettingStrategyLabel = panel:recursiveGetChildById('SettingStrategyLabel'),
     SettingStrategyList = panel:recursiveGetChildById('SettingStrategyList'),
+    LootListText = panel:recursiveGetChildById('lootListText')
   }
 
   -- Setting Mode List

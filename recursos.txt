@@ -1,0 +1,17 @@
+g_keyboard.bindKeyPress('Home', function()
+	local player = g_game.getLocalPlayer()
+	local mypos = player:getPosition()
+	local tile = g_map.getTile(mypos)
+	local bp = player:getInventoryItem(InventorySlotBack)
+	local GP = 3031
+	local Plat = 3035
+	local GPNABP = player:getItem(GP)
+	local PlatNaBP = player:getItem(Plat)
+	local verificaSQM = tile:getTopMoveThing():getId()
+	
+	if GPNABP == nil then
+		g_game.use(PlatNaBP)
+	elseif verificaSQM ~= GP then
+		g_game.move(GPNABP, mypos, 2)
+	end
+end)  
