@@ -7,9 +7,55 @@ Panel
   height: 400
 
   BotOptionCheckBox
-    id: AntiPus
+    id: AntiPush
     width: 220
     !text: tr('Active anti-push')
-    !tooltip: tr('Drop GP and Worm in posicion on press DEL.')
+    !tooltip: tr('Drop GP and Worm in posicion on press CTRL+E.')
     anchors.left: parent.left
     anchors.top: parent.top
+
+  HorizontalSeparator
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 10
+
+  Label
+    id: LabelHealList
+    text: Heal Friend:
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 4
+    width: 130
+
+  TextList
+    id: HealList
+    anchors.top: LabelHealList.bottom
+    anchors.left: parent.left
+    margin-bottom: 5
+    margin-top: 8
+    padding: 1
+    focusable: false
+    phantom: true
+    vertical-scrollbar: HealListScrollBar
+    width: 140
+    height: 270
+
+  VerticalScrollBar
+    id: HealListScrollBar
+    anchors.top: HealList.top
+    anchors.bottom: HealList.bottom
+    anchors.left: HealList.right
+    step: 16
+    pixels-scroll: true
+
+  BotOptionHorizontalScrollBar
+    id: HealBar
+    width: 150
+    anchors.right: parent.right
+    anchors.top: HealListScrollBar.top
+    mouse-scroll: false
+    show-value: true
+    symbol: %
+    minimum: 1
+    maximum: 100
