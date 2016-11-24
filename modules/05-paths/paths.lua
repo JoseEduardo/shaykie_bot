@@ -11,6 +11,8 @@ dofiles('events')
 local Panel = {}
 UI_Path = {}
 
+local currentIndexPath
+local selectedPath
 local refreshEvent
 local loadListIndex
 local NodeTypes = {
@@ -89,7 +91,12 @@ function PathsModule.init()
 end
 
 function PathsModule.createPath(posToWalk)
-  PathsModule.addToPathList(posToWalk);
+  local path = Path.create()
+  path:setTarget(posToWalk)
+  path:setCommand("")
+  path:setName(os.clock())
+
+  PathsModule.addToPathList(path);
 end
 
 function PathsModule.terminate()
@@ -129,7 +136,8 @@ function PathsModule.loadUI(panel)
     SaveNameEdit = panel:recursiveGetChildById('SaveNameEdit'),
     LoadList = panel:recursiveGetChildById('LoadList'),
     LoadButton = panel:recursiveGetChildById('LoadButton'),
-    Minimap = panel:recursiveGetChildById('PathMap')
+    Minimap = panel:recursiveGetChildById('PathMap'),
+    TextAction = panel:recursiveGetChildById('actionText')
   }
 
   -- Load image resources
@@ -138,38 +146,41 @@ function PathsModule.loadUI(panel)
   }
 end
 
-function PathsModule.addToPathList(target)
+function PathsModule.addToPathList(pathTarget)
+  local pathPos = pathTarget:getTarget()
+
   local item = g_ui.createWidget('ListRowComplex', UI_Path.PathList)
-  item:setText(postostring(target))
+  item:setText(postostring(pathPos))
   item:setTextAlign(AlignLeft)
   item:setId(#UI_Path.PathList:getChildren()+1)
-  item.target = target
+  item.path = pathTarget
+  item.id = pathTarget:getName()
 
-  UI_Path.Minimap:addFlag(target, 1, "teste")
+  UI_Path.Minimap:addFlag(pathPos, 1, "teste")
 
   local removeButton = item:getChildById('remove')
   connect(removeButton, {
     onClick = function(button)
-      if removeTargetWindow then return end
+      if removePathWindow then return end
 
       local row = button:getParent()
-      local targetName = row:getText()
+      local pathName = row:getText()
 
       local yesCallback = function()
+        UI_Path.Minimap:removeFlag(row.path.target, 1, "")
+
         row:destroy()
-        removeTargetWindow:destroy()
-        removeTargetWindow=nil
-        -- trtar aqui para pegar a pos certa e tirar do map
-        UI_Path.Minimap:removeFlag(row.target, 1, "")
+        removePathWindow:destroy()
+        removePathWindow=nil
       end
 
       local noCallback = function()
-        removeTargetWindow:destroy()
-        removeTargetWindow=nil
+        removePathWindow:destroy()
+        removePathWindow=nil
       end
 
-      removeTargetWindow = displayGeneralBox(tr('Remove'), 
-        tr('Remove '..targetName..'?'), {
+      removePathWindow = displayGeneralBox(tr('Remove'), 
+        tr('Remove '..pathName..'?'), {
         { text=tr('Yes'), callback=yesCallback },
         { text=tr('No'), callback=noCallback },
         anchor=AnchorHorizontalCenter}, yesCallback, noCallback)
@@ -235,7 +246,41 @@ function PathsModule.bindHandlers()
       end
     })
 
+  connect(UI_Path.PathList, {
+    onChildFocusChange = function(self, focusedChild)
+      if focusedChild == nil then return end
+      selectedPath = PathsModule.getPaths(focusedChild.id)
+      if selectedPath then
+        PathsModule.setCurrentPath(selectedPath)
+      end
+    end
+  })
+
+ connect(UI_Path.TextAction, {
+    onTextChange = function(self, text, oldText)
+      if selectedPath then
+        selectedPath:setCommand(text)
+      end
+    end
+  })
+
 end
+
+function PathsModule.setCurrentPath(pathSelected)
+  UI_Path.TextAction:setText(pathSelected:getCommand(), true)
+end
+
+function PathsModule.getPaths(name)
+  local t = UI_Path.PathList:getChildren()
+  for idx,child in pairs(t) do
+    local t = child.path
+    if t and t:getName() == name then
+      currentIndexPath = idx
+     return t
+    end
+  end
+end
+
 
 function writePaths(config)
   if not config then return end
@@ -243,7 +288,8 @@ function writePaths(config)
 
   local t = UI_Path.PathList:getChildren()
   for k,v in pairs(t) do
-    paths[k] = v.target
+    local currPath = v.path
+    paths[k] = currPath:toNode()
   end
 
   config:setNode('Paths', paths)
@@ -302,6 +348,7 @@ function PathsModule.loadPaths(file, force)
       local targets = parsePaths(config)
       for v,target in pairs(targets) do
         if target then
+          print( target )
           PathsModule.addToPathList(target)
         end
       end
@@ -311,7 +358,6 @@ function PathsModule.loadPaths(file, force)
       --  currentFileLoaded = file
       --  CandyBot.changeOption(UI.LoadList:getId(), file)
       --end
-
     end
 
     if force then
@@ -392,12 +438,14 @@ function parsePaths(config)
   -- loop each target node
   local index = 1
   for k,v in pairs(config:getNode("Paths")) do
-    PathsModule.addToPathList(v)
-    --paths[index] = target
+    local path = Path.create()
+    path:parseNode(v)
+    paths[index] = path
     index = index + 1
   end
 
   return paths
+
 end
 
 return PathsModule

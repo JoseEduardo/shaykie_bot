@@ -1,7 +1,9 @@
 #CandyBot v0.1
 
+Para funcionar corretamente o PATH é necessario alterar o client para andar sobre fields, para isso antere a seguinte tag
 result = g_map.findPath(m_position, destination, 50000, Otc::PathFindAllowNonPathable);
-change localplayer.cpp before this
+
+no arquivo localplayer.cpp antes do seguinte codigo
 if(std::get<1>(result) != Otc::PathFindResultOk) {
     callLuaField("onAutoWalkFail", std::get<1>(result));
 

@@ -322,6 +322,21 @@ Panel
         anchors.right: parent.right
         margin: 0 4 0 0
 
+  Label
+    id: SettingMovementLabel
+    !text: tr('Loot List')
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    margin-top: 5
+
+  MultilineTextEdit
+    id: lootListText
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 50
+    text-wrap: true
+
   HorizontalSeparator
     anchors.left: parent.left
     anchors.right: parent.right
