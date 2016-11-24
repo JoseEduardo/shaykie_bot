@@ -12,6 +12,8 @@ local Panel = {
   --
 }
 
+local UI = {}
+
 function PvpModule.getPanel() return Panel end
 function PvpModule.setPanel(panel) Panel = panel end
 
@@ -25,7 +27,7 @@ function PvpModule.init()
   Panel = g_ui.loadUI('pvp.otui', tabBuffer)
 
   PvpModule.parentUI = CandyBot.window
-  PvpModule.loadUI(panel)
+  PvpModule.loadUI(Panel)
 
   -- register module
   Modules.registerModule(PvpModule)
@@ -70,7 +72,9 @@ function PvpModule.bindHandlers()
 
   modules.game_interface.addMenuHook("siobot", tr("Add to sio"), 
     function(menuPosition, lookThing, useThing, creatureThing)
-      PvpModule.addCreatureToSio(creatureThing:getId(), creatureThing:getName())
+      if creatureThing ~= nil then
+        PvpModule.addCreatureToSio(creatureThing:getId(), creatureThing:getName())
+      end
     end,
     function(menuPosition, lookThing, useThing, creatureThing)
       return lookThing ~= nil and lookThing:getTile() ~= nil
@@ -93,15 +97,15 @@ function PvpModule.terminate()
   Panel = nil
 end
 
-
---[[ SIO ]]
 function onCreatureHealthPercentChange(creature, health)
   if not g_game.isOnline() then
     return
   end
 
-  if not creature:isLocalPlayer() and checkInNamesForSio(creture:getName()) then
-    PvpModule.doHealFriend(creature);
+  if creature ~= nil then
+    if PvpModule.checkInNamesForSio(creature:getName()) then
+      PvpModule.doHealFriend(creature);
+    end
   end
 end
 
@@ -113,7 +117,7 @@ function PvpModule.checkCreatures()
   local player = g_game.getLocalPlayer()
   local spectators = g_map.getSpectators(player:getPosition(), false)
   for _, creature in ipairs(spectators) do
-    if not creature:isLocalPlayer() and checkInNamesForSio(creture:getName()) then
+    if not creature:isLocalPlayer() and PvpModule.checkInNamesForSio(creture:getName()) then
       PvpModule.doHealFriend(creature);
     end
   end
@@ -132,7 +136,7 @@ end
 
 function PvpModule.doHealFriend(creature)
     local healthValue = UI.HealBar:getValue()
-    
+
     local delay = 0
     if creature:getHealthPercent() < healthValue then
       g_game.talk('exura sio "'..creature:getName())
