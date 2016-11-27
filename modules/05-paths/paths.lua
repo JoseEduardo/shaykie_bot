@@ -448,4 +448,8 @@ function parsePaths(config)
 
 end
 
+function PathsModule.executeAction(actionFunct)
+  Action.doActionForPlayer(g_game.getLocalPlayer(), 'Action.'..actionFunct)
+end
+
 return PathsModule

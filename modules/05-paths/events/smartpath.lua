@@ -128,9 +128,14 @@ function SmartPath.checkPathing(dirs, override, dontChange)
     end
 
     player:stopAutoWalk()
-    local posWalk = getWalkPosByIndex(currIndex).target
+    local currPath = getWalkPosByIndex(currIndex) 
+    local posWalk  = currPath.target
     
     if player:autoWalk( posWalk ) then
+      if currPath.command ~= '' then
+        PathsModule.executeAction(currPath.command)
+      end
+
       BotLogger.debug("Success walk: ".. postostring(posWalk) )
       SmartPath.lastDest.time = currentTime
     end

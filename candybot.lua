@@ -15,6 +15,7 @@ CandyBot.defaultOptions = {
 dofile('consts.lua')
 dofile('helper.lua')
 dofile('logger.lua')
+dofile('action.lua')
 
 dofile('modules.lua')
 dofile('events.lua')
