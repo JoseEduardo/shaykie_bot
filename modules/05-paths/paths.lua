@@ -449,7 +449,7 @@ function parsePaths(config)
 end
 
 function PathsModule.executeAction(actionFunct)
-  Action.doActionForPlayer(g_game.getLocalPlayer(), 'Action.'..actionFunct)
+  Action.doActionForPlayer('Action.'..actionFunct)
 end
 
 return PathsModule
