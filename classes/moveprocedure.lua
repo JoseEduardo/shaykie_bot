@@ -74,6 +74,15 @@ function MoveProcedure:tryMove()
   
   if self:isTimedOut() then return end
   g_game.move(self.thing, self.position, self.thing:getCount())
+
+  if self.thing:getId() == 3031 or self.thing:getId() == 3035 then
+    if self.thing:getCount() == 100 then
+      local player = g_game.getLocalPlayer()
+      local inCoinBackpack = player:getItem(self.thing:getId())
+
+      g_game.use(inCoinBackpack)
+    end
+  end
   
   -- the move has been called schedule finish
   local wait = (g_game.getPing()*1.5)

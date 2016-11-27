@@ -55,7 +55,7 @@ function getWalkPosByIndex(pos)
   return returnItem
 end
 
-function countTable()
+function countTablePath()
   local count = 0
   local t = UI_Path.PathList:getChildren()
 
@@ -122,8 +122,8 @@ function SmartPath.checkPathing(dirs, override, dontChange)
     end
   end
 
-  if countTable() > 0 then
-    if currIndex > countTable()-1 then
+  if countTablePath() > 0 then
+    if currIndex > countTablePath()-1 then
       currIndex = 0
     end
 
