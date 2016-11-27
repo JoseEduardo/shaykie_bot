@@ -191,7 +191,7 @@ function Helper.startChooseItem(releaseCallback)
   mouseGrabberWidget:grabMouse()
   g_mouse.pushCursor('target')
 
-  CandyBot.hide()
+  ShaykieBot.hide()
 end
 
 function Helper.getActiveRingId(itemid)

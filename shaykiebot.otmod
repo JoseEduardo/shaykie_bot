@@ -1,0 +1,14 @@
+Module
+  name: otclient_shaykiebot
+  description: Bot Addon
+  author: Ben Dol (benis), Alexandre Severino (kilouco) - SHAYKIE
+  website: xxx
+  version: 1.0
+
+  autoload: true
+  autoload-priority: 1000
+  sandbox: true
+  scripts: [ shaykiebot ]
+
+  @onLoad: init()
+  @onUnload: terminate()

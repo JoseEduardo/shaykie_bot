@@ -39,7 +39,7 @@ end
 
 function Action.getQtyItem(cid, item)
   local player = g_game.getLocalPlayer()
-  return player:getItem(item):getCount()
+  return player:getItemsCount(item)
 end
 
 function Action.loadPath(file)

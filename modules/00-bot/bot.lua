@@ -16,11 +16,11 @@ function BotModule.getPanel() return Panel end
 
 function BotModule.init()
   g_ui.importStyle('bot')
-  Panel = g_ui.createWidget('BotPanel', CandyBot.window)
+  Panel = g_ui.createWidget('BotPanel', ShaykieBot.window)
 
   Panel.BotEnabled = Panel:getChildById('BotEnabled')
 
-  BotModule.parentUI = CandyBot.window
+  BotModule.parentUI = ShaykieBot.window
 
   BotModule.startItemInfo()
 
@@ -51,7 +51,7 @@ function BotModule.stopItemInfo()
 end
 
 function BotModule.checkItem(widget, hovered)
-  if not CandyBot.isEnabled() then
+  if not ShaykieBot.isEnabled() then
     return
   end
   

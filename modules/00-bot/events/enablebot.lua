@@ -12,7 +12,7 @@ function Enable.Event(event)
   botIcon:setEnabled(true)
   botIcon:setTooltip("Enabled")
 
-  CandyBot.enable(true)
+  ShaykieBot.enable(true)
   EventHandler.signal() -- signal events to start
   ListenerHandler.signal() -- signal listeners to start
 

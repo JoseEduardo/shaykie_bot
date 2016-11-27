@@ -4,10 +4,10 @@
             main bot controls and functionality.
 ]]
 
-CandyBot = extends(UIWidget, "CandyBot")
-CandyBot.window = nil
-CandyBot.options = {}
-CandyBot.defaultOptions = {
+ShaykieBot = extends(UIWidget, "ShaykieBot")
+ShaykieBot.window = nil
+ShaykieBot.options = {}
+ShaykieBot.defaultOptions = {
   ["LoggerType"] = 1,
   ["PrintLogs"] = false
 }
@@ -29,12 +29,12 @@ local botButton
 local botTabBar
 
 local enabled = false
-local writeDir = "/candybot"
+local writeDir = "/shaykiebot"
 
 local function setupDefaultOptions()
   for _, module in pairs(Modules.getOptions()) do
     for k, option in pairs(module) do
-      CandyBot.defaultOptions[k] = option
+      ShaykieBot.defaultOptions[k] = option
     end
   end
 end
@@ -47,15 +47,15 @@ local function loadModules()
 end
 
 function init()
-  CandyBot.window = g_ui.displayUI('candybot.otui')
-  CandyBot.window:setVisible(false)
+  ShaykieBot.window = g_ui.displayUI('shaykiebot.otui')
+  ShaykieBot.window:setVisible(false)
 
   botButton = modules.client_topmenu.addRightGameToggleButton(
-    'botButton', 'Bot (Ctrl+Shift+B)', 'candybot', CandyBot.toggle)
+    'botButton', 'Bot (Ctrl+Shift+B)', 'shaykiebot', ShaykieBot.toggle)
   botButton:setOn(false)
 
-  botTabBar = CandyBot.window:getChildById('botTabBar')
-  botTabBar:setContentWidget(CandyBot.window:getChildById('botContent'))
+  botTabBar = ShaykieBot.window:getChildById('botTabBar')
+  botTabBar:setContentWidget(ShaykieBot.window:getChildById('botContent'))
   botTabBar:setTabSpacing(-1)
 
   -- setup resources
@@ -71,27 +71,27 @@ function init()
 
   -- hook functions
   connect(g_game, { 
-    onGameStart = CandyBot.online,
-    onGameEnd = CandyBot.offline
+    onGameStart = ShaykieBot.online,
+    onGameEnd = ShaykieBot.offline
   })
 
   -- get bot settings
-  CandyBot.options = g_settings.getNode('Bot') or {}
+  ShaykieBot.options = g_settings.getNode('Bot') or {}
   
   if g_game.isOnline() then
-    CandyBot.online()
+    ShaykieBot.online()
   end
 end
 
 function terminate()
-  CandyBot.hide()
+  ShaykieBot.hide()
   disconnect(g_game, {
-    onGameStart = CandyBot.online,
-    onGameEnd = CandyBot.offline
+    onGameStart = ShaykieBot.online,
+    onGameEnd = ShaykieBot.offline
   })
 
   if g_game.isOnline() then
-    CandyBot.offline()
+    ShaykieBot.offline()
   end
 
   Modules.terminate()
@@ -101,98 +101,98 @@ function terminate()
     botButton = nil
   end
 
-  CandyBot.window:destroy()
+  ShaykieBot.window:destroy()
 end
 
-function CandyBot.online()
-  addEvent(CandyBot.loadOptions)
+function ShaykieBot.online()
+  addEvent(ShaykieBot.loadOptions)
 
   -- bind keys
-  g_keyboard.bindKeyDown('Ctrl+Shift+B', CandyBot.toggle)
+  g_keyboard.bindKeyDown('Ctrl+Shift+B', ShaykieBot.toggle)
 end
 
-function CandyBot.offline()
+function ShaykieBot.offline()
   Modules.stop()
 
-  CandyBot.hide()
+  ShaykieBot.hide()
 
   -- unbind keys
   g_keyboard.unbindKeyDown('Ctrl+Shift+B')
 end
 
-function CandyBot.toggle()
-  if CandyBot.window:isVisible() then
-    CandyBot.hide()
+function ShaykieBot.toggle()
+  if ShaykieBot.window:isVisible() then
+    ShaykieBot.hide()
   else
-    CandyBot.show()
-    CandyBot.window:focus()
+    ShaykieBot.show()
+    ShaykieBot.window:focus()
   end
 end
 
-function CandyBot.show()
+function ShaykieBot.show()
   if g_game.isOnline() then
-    CandyBot.window:show()
+    ShaykieBot.window:show()
     botButton:setOn(true)
   end
 end
 
-function CandyBot.hide()
-  CandyBot.window:hide()
+function ShaykieBot.hide()
+  ShaykieBot.window:hide()
   botButton:setOn(false)
 end
 
-function CandyBot.enable(state)
+function ShaykieBot.enable(state)
   enabled = state
   if not state then Modules.stop() end
 end
 
-function CandyBot.isEnabled()
+function ShaykieBot.isEnabled()
   return enabled
 end
 
-function CandyBot.getIcon()
+function ShaykieBot.getIcon()
   return botIcon
 end
 
-function CandyBot.getUI()
-  return CandyBot.window
+function ShaykieBot.getUI()
+  return ShaykieBot.window
 end
 
-function CandyBot.getParent()
-  return CandyBot.window:getParent() -- main window
+function ShaykieBot.getParent()
+  return ShaykieBot.window:getParent() -- main window
 end
 
-function CandyBot.getWriteDir()
+function ShaykieBot.getWriteDir()
   return writeDir
 end
 
-function CandyBot.loadOptions()
+function ShaykieBot.loadOptions()
   local char = g_game.getCharacterName()
 
-  if CandyBot.options[char] ~= nil then
-    for i, v in pairs(CandyBot.options[char]) do
-      addEvent(function() CandyBot.changeOption(i, v, true) end)
+  if ShaykieBot.options[char] ~= nil then
+    for i, v in pairs(ShaykieBot.options[char]) do
+      addEvent(function() ShaykieBot.changeOption(i, v, true) end)
     end
   else
-    for i, v in pairs(CandyBot.defaultOptions) do
-      addEvent(function() CandyBot.changeOption(i, v, true) end)
+    for i, v in pairs(ShaykieBot.defaultOptions) do
+      addEvent(function() ShaykieBot.changeOption(i, v, true) end)
     end
   end
 end
 
-function CandyBot.changeOption(key, state, loading)
+function ShaykieBot.changeOption(key, state, loading)
   local loading = loading or false
   if state == nil then
     return
   end
   
-  if CandyBot.defaultOptions[key] == nil then
-    CandyBot.options[key] = nil
+  if ShaykieBot.defaultOptions[key] == nil then
+    ShaykieBot.options[key] = nil
     return
   end
 
   if g_game.isOnline() then
-    local panel = CandyBot.window
+    local panel = ShaykieBot.window
 
     if loading then
       local widget
@@ -203,7 +203,7 @@ function CandyBot.changeOption(key, state, loading)
       if not widget then 
         widget = panel:recursiveGetChildById(key)
         if not widget then
-          BotLogger.warning("CandyBot: no widget found with name '"..key.."'")
+          BotLogger.warning("ShaykieBot: no widget found with name '"..key.."'")
           return
         end
       end
@@ -231,13 +231,13 @@ function CandyBot.changeOption(key, state, loading)
 
     local char = g_game.getCharacterName()
 
-    if CandyBot.options[char] == nil then
-      CandyBot.options[char] = {}
+    if ShaykieBot.options[char] == nil then
+      ShaykieBot.options[char] = {}
     end
 
-    CandyBot.options[char][key] = state
+    ShaykieBot.options[char][key] = state
     
     -- Update the settings
-    g_settings.setNode('Bot', CandyBot.options)
+    g_settings.setNode('Bot', ShaykieBot.options)
   end
 end

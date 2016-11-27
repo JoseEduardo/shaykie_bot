@@ -1,28 +1,28 @@
 BotOptionLineEdit < TextEdit
-  @onTextChange: CandyBot.changeOption(self:getId(), self:getText())
+  @onTextChange: ShaykieBot.changeOption(self:getId(), self:getText())
 
 BotOptionCheckBox < CheckBox
-  @onCheckChange: CandyBot.changeOption(self:getId(), self:isChecked())
+  @onCheckChange: ShaykieBot.changeOption(self:getId(), self:isChecked())
 
 BotOptionTextList < TextList
   @onChildFocusChange: |
     local focusedChild = self:getFocusedChild()
     if focusedChild then
-      CandyBot.changeOption(self:getId(), focusedChild:getText())
+      ShaykieBot.changeOption(self:getId(), focusedChild:getText())
     end
 
 BotOptionHorizontalScrollBar < HorizontalScrollBar
-  @onValueChange: CandyBot.changeOption(self:getId(), self:getValue())
+  @onValueChange: ShaykieBot.changeOption(self:getId(), self:getValue())
 
 BotOptionVerticalScrollBar < VerticalScrollBar
-  @onValueChange: CandyBot.changeOption(self:getId(), self:getValue())
+  @onValueChange: ShaykieBot.changeOption(self:getId(), self:getValue())
 
 BotOptionComboBoxPopupMenuButton < ComboBoxPopupMenuButton
 BotOptionComboBoxPopupMenu < ComboBoxPopupMenu
 BotOptionComboBoxPopupScrollMenu < ComboBoxPopupScrollMenu
 BotOptionComboBoxPopupScrollMenuButton < ComboBoxPopupScrollMenuButton
 BotOptionComboBox < ComboBox
-  @onOptionChange: CandyBot.changeOption(self:getId(), self:getCurrentOption().text)
+  @onOptionChange: ShaykieBot.changeOption(self:getId(), self:getCurrentOption().text)
 
 ListRowComplex < UIWidget
   height: 14
@@ -123,9 +123,9 @@ PathMap < UIPathMap
 
 MainWindow
   id: botWindow
-  !text: tr('CandyBot')
+  !text: tr('ShaykieBot')
   size: 422 605
-  @onEscape: CandyBot.hide()
+  @onEscape: ShaykieBot.hide()
 
   &save: true
 
@@ -210,7 +210,7 @@ MainWindow
     anchors.bottom: parent.bottom
     margin-right: -6
     margin-bottom: -5
-    @onClick: CandyBot.hide()
+    @onClick: ShaykieBot.hide()
 
   BotOptionComboBox
     id: LoggerType
@@ -235,7 +235,7 @@ MainWindow
       elseif option.text == "Debug" then
         BotLogger.logType = BotLogTypes.debug
       end
-      CandyBot.changeOption(self:getId(), self:getCurrentOption().text)
+      ShaykieBot.changeOption(self:getId(), self:getCurrentOption().text)
 
   BotOptionCheckBox
     id: PrintLogs

@@ -11,7 +11,7 @@ dofiles('events')
 local Panel = {}
 local UI = {}
 
-local targetsDir = CandyBot.getWriteDir().."/targets"
+local targetsDir = ShaykieBot.getWriteDir().."/targets"
 local selectedTarget
 local currentSetting
 local refreshEvent
@@ -32,7 +32,7 @@ function TargetsModule.getUI() return UI end
 
 function TargetsModule.init()
   -- create tab
-  local botTabBar = CandyBot.window:getChildById('botTabBar')
+  local botTabBar = ShaykieBot.window:getChildById('botTabBar')
   local tab = botTabBar:addTab(tr('Targets'))
 
   local tabPanel = botTabBar:getTabPanel(tab)
@@ -47,7 +47,7 @@ function TargetsModule.init()
   
   TargetsModule.bindHandlers()
 
-  TargetsModule.parentUI = CandyBot.window
+  TargetsModule.parentUI = ShaykieBot.window
 
   -- setup resources
   if not g_resources.directoryExists(targetsDir) then
@@ -590,7 +590,7 @@ function TargetsModule.onChooseSettingItem(self, item)
       end
     end
 
-    CandyBot.show()
+    ShaykieBot.show()
     return true
   end
 end
@@ -724,7 +724,7 @@ function TargetsModule.loadTargets(file, force)
       
       if not force then
         currentFileLoaded = file
-        CandyBot.changeOption(UI.LoadList:getId(), file)
+        ShaykieBot.changeOption(UI.LoadList:getId(), file)
       end
     end
 

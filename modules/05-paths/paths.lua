@@ -26,7 +26,7 @@ local NodeTypes = {
   Walk = "walk"
 }
 
-local pathsDir = CandyBot.getWriteDir().."/paths"
+local pathsDir = ShaykieBot.getWriteDir().."/paths"
 
 function PathsModule.getPanel() return Panel end
 function PathsModule.setPanel(panel) Panel = panel end
@@ -34,7 +34,7 @@ function PathsModule.getUI() return UI_Path end
 
 function PathsModule.init()
   -- create tab
-  local botTabBar = CandyBot.window:getChildById('botTabBar')
+  local botTabBar = ShaykieBot.window:getChildById('botTabBar')
   local tab = botTabBar:addTab(tr('Paths'))
 
   local tabPanel = botTabBar:getTabPanel(tab)
@@ -45,7 +45,7 @@ function PathsModule.init()
 
   PathsModule.bindHandlers()
 
-  PathsModule.parentUI = CandyBot.window
+  PathsModule.parentUI = ShaykieBot.window
 
   -- setup resources
   if not g_resources.directoryExists(pathsDir) then
@@ -356,7 +356,7 @@ function PathsModule.loadPaths(file, force)
 
       --if not force then
       --  currentFileLoaded = file
-      --  CandyBot.changeOption(UI.LoadList:getId(), file)
+      --  ShaykieBot.changeOption(UI.LoadList:getId(), file)
       --end
     end
 

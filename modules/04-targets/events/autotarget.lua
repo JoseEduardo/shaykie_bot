@@ -141,7 +141,6 @@ function AutoTarget.Event(event)
   -- its attacking when on the server its not. To resolve
   -- this we will need to find out what is causing it and 
   -- also add a fail safe timeout mechanism.
-  -- See: https://github.com/BenDol/otclient-candybot/issues/20
 
   -- Cannot continue if still attacking or is in pz
   local player = g_game.getLocalPlayer()

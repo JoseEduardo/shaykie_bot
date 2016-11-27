@@ -17,7 +17,7 @@ function SupportModule.setPanel(panel) Panel = panel end
 
 function SupportModule.init()
   -- create tab
-  local botTabBar = CandyBot.window:getChildById('botTabBar')
+  local botTabBar = ShaykieBot.window:getChildById('botTabBar')
   local tab = botTabBar:addTab(tr('Support'))
 
   local tabPanel = botTabBar:getTabPanel(tab)
@@ -37,14 +37,14 @@ function SupportModule.init()
   Panel.RingReplaceDisplay = ringItemBox
 
   ringComboBox.onOptionChange = function(widget, text, data)
-    CandyBot.changeOption(widget:getId(), widget:getCurrentOption().text)
+    ShaykieBot.changeOption(widget:getId(), widget:getCurrentOption().text)
     ringItemBox:setItemId(Helper.getRingIdByName(text))
   end
   for k,v in pairs(Rings) do
     ringComboBox:addOption(k)
   end
   
-  SupportModule.parentUI = CandyBot.window
+  SupportModule.parentUI = ShaykieBot.window
 
   -- register module
   Modules.registerModule(SupportModule)
@@ -62,8 +62,8 @@ end
 function SupportModule.onChooseHealthItem(self, item)
   if item then
     Panel.CurrentHealthItem:setItemId(item:getId())
-    CandyBot.changeOption('CurrentHealthItem', item:getId())
-    CandyBot.show()
+    ShaykieBot.changeOption('CurrentHealthItem', item:getId())
+    ShaykieBot.show()
     return true
   end
 end
@@ -71,8 +71,8 @@ end
 function SupportModule.onChooseManaItem(self, item)
   if item then
     Panel.CurrentManaItem:setItemId(item:getId())
-    CandyBot.changeOption('CurrentManaItem', item:getId())
-    CandyBot.show()
+    ShaykieBot.changeOption('CurrentManaItem', item:getId())
+    ShaykieBot.show()
     return true
   end
 end
