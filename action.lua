@@ -37,6 +37,15 @@ function Action.getCapacity(cid)
   return g_game.getLocalPlayer():getFreeCapacity()
 end
 
+function Action.getQtyItem(cid, item)
+  local player = g_game.getLocalPlayer()
+  return player:getItem(item):getCount()
+end
+
+function Action.loadPath(file)
+  PathsModule.loadPaths(file, true)
+end
+
 --rever isso pq ta mt horrivel
 function Action.condition(cid, param1, cond, param2, ifp, elsep)
   if cond == '>' then
