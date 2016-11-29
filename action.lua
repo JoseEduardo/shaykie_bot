@@ -27,14 +27,14 @@ function Action.talk(message)
 end
 
 function Action.talkNPC(message)
-      g_game.talkPrivate(11, 'NPCs', message)
+  g_game.talkPrivate(11, 'NPCs', message)
 end
 
 function Action.sellItemForNpc(item, qty)
   g_game.sellItem(item, qty, true)
 end
 
-function Action.sellItemForNpc(item, qty, ignoreCap, buyWithBP)
+function Action.buyItemForNpc(item, qty, ignoreCap, buyWithBP)
   g_game.buyItem(item, qty, ignoreCap, buyWithBP)
 end
 

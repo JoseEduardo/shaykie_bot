@@ -10,7 +10,7 @@ Procedure.create = function(id)
 
   proc.id = id
   proc.timedOut = false
-  proc.timeoutTicks = 30000
+  proc.timeoutTicks = 8000
   proc.timeoutEvent = nil
 
   return proc
