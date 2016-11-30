@@ -56,12 +56,20 @@ Panel
     anchors.bottom: LootList.bottom
     margin-left: 20
 
+    Item
+      id: ItemLootDisplay
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin-top: 6
+      virtual: true
+
     Label
       id: lblItemsID
       text: Item ID:
-      anchors.left: parent.left
-      anchors.top: parent.top
+      anchors.left: ItemLootDisplay.left
+      anchors.top: ItemLootDisplay.top
       margin-top: 4
+      margin-left: 4
       width: 80
 
     TextEdit

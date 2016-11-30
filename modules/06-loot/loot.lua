@@ -54,7 +54,8 @@ function LootModule.loadUI(panel)
     LoadButton = panel:recursiveGetChildById('LoadButton'),
     SaveNameEdit = panel:recursiveGetChildById('SaveNameEdit'),
     ItemID = panel:recursiveGetChildById('ItemID'),
-    ItemCap = panel:recursiveGetChildById('ItemCap')
+    ItemCap = panel:recursiveGetChildById('ItemCap'),
+    ItemLootBox = panel:recursiveGetChildById('ItemLootDisplay')
   }
 end
 
@@ -96,6 +97,16 @@ function LootModule.bindHandlers()
     function(menuPosition, lookThing, useThing, creatureThing)
       return lookThing ~= nil and lookThing:getTile() ~= nil
     end)
+
+  connect(UI.ItemID, {
+    onTextChange = function(self, text, oldText)
+      LootModule.setItemPreview(text)
+    end
+  })
+end
+
+function LootModule.setItemPreview(itemID)
+  UI.ItemLootBox:setItemId(itemID)
 end
 
 function LootModule.syncLoot(loot)
