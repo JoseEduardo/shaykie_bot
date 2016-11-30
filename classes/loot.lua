@@ -48,16 +48,16 @@ function Loot:setName(name)
   end
 end
 
-function Loot:getSettings()
-  return self.settings
+function Loot:getCap()
+  return self.cap
 end
 
-function Loot:setSettings(settings)
-  local oldSettings = self.settings
-  if settings ~= oldSettings then
-    self.settings = settings
+function Loot:setCap(cap)
+  local oldcap = self.cap
+  if cap ~= oldcap then
+    self.cap = cap
     
-    signalcall(self.onSettingsChange, self, settings, oldSettings)
+    signalcall(self.onSettingsChange, self, cap, oldcap)
   end
 end
 

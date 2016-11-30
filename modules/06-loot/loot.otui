@@ -50,10 +50,58 @@ Panel
 
   Panel
     id: LootListPanel
-    anchors.left: parent.left
-    anchors.right: LootListScrollBar.right
+    anchors.left: LootListScrollBar.left
+    anchors.right: parent.right
     anchors.top: LootListScrollBar.top
     anchors.bottom: LootList.bottom
+    margin-left: 20
+
+    Label
+      id: lblItemsID
+      text: Item ID:
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin-top: 4
+      width: 80
+
+    TextEdit
+      id: ItemID
+      anchors.top: prev.bottom
+      anchors.left: prev.left
+      width: 70
+
+    Label
+      text: Cap:
+      anchors.left: lblItemsID.right
+      anchors.top: lblItemsID.top
+      width: 130
+
+    TextEdit
+      id: ItemCap
+      anchors.top: ItemID.top
+      anchors.left: ItemID.right
+      margin-left: 10
+      width: 70
+
+    Button
+      id: addButton
+      !text: tr('Add Item')
+      anchors.top: ItemID.bottom
+      anchors.left: ItemID.left
+      anchors.right: ItemCap.right
+      margin-top: 3
+      enabled: true
+      @onClick: |
+        local parent = self:getParent()
+        local ItemID = parent:getChildById('ItemID')
+        local ItemCap = parent:getChildById('ItemCap')
+        TargetsModule.addLootItem(ItemID:getText(), "", ItemCap:getText())
+
+  HorizontalSeparator
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 10
 
   Panel
     id: SaveLoadPanel
@@ -102,7 +150,7 @@ Panel
         local parent = self:getParent()
         local focusedChild = parent:getChildById('LoadList'):getFocusedChild()
         if focusedChild then
-          LootModule.loadPaths(focusedChild:getText())
+          LootModule.loadLootList(focusedChild:getText())
         end
 
     Label

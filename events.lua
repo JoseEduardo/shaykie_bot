@@ -84,7 +84,7 @@ function EventHandler.rescheduleEvent(moduleId, eventId, ticks, bypass)
 end
 
 function EventHandler.process(moduleId, eventId, callback, ticks, bypass)
-  if CandyBot.isEnabled() or bypass then
+  if ShaykieBot.isEnabled() or bypass then
     local newTicks, newBypass = callback(eventId)
     if not newTicks or type(newTicks) ~= "number" and newTicks < 1 then
       newTicks = ticks

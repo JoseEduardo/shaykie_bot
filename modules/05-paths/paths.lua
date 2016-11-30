@@ -26,7 +26,7 @@ local NodeTypes = {
   Walk = "walk"
 }
 
-local pathsDir = CandyBot.getWriteDir().."/paths"
+local pathsDir = ShaykieBot.getWriteDir().."/paths"
 
 function PathsModule.getPanel() return Panel end
 function PathsModule.setPanel(panel) Panel = panel end
@@ -34,7 +34,7 @@ function PathsModule.getUI() return UI_Path end
 
 function PathsModule.init()
   -- create tab
-  local botTabBar = CandyBot.window:getChildById('botTabBar')
+  local botTabBar = ShaykieBot.window:getChildById('botTabBar')
   local tab = botTabBar:addTab(tr('Paths'))
 
   local tabPanel = botTabBar:getTabPanel(tab)
@@ -45,7 +45,7 @@ function PathsModule.init()
 
   PathsModule.bindHandlers()
 
-  PathsModule.parentUI = CandyBot.window
+  PathsModule.parentUI = ShaykieBot.window
 
   -- setup resources
   if not g_resources.directoryExists(pathsDir) then
@@ -246,16 +246,6 @@ function PathsModule.bindHandlers()
       end
     })
 
-  connect(UI_Path.PathList, {
-    onChildFocusChange = function(self, focusedChild)
-      if focusedChild == nil then return end
-      selectedPath = PathsModule.getPaths(focusedChild.id)
-      if selectedPath then
-        PathsModule.setCurrentPath(selectedPath)
-      end
-    end
-  })
-
  connect(UI_Path.TextAction, {
     onTextChange = function(self, text, oldText)
       if selectedPath then
@@ -336,10 +326,10 @@ function PathsModule.savePaths(file)
 end
 
 function PathsModule.loadPaths(file, force)
-  BotLogger.debug("TargetsModule.loadTargets("..file..")")
+  BotLogger.debug("PathsModule.loadTargets("..file..")")
   local path = pathsDir.."/"..file
   local config = g_configs.load(path)
-  BotLogger.debug("TargetsModule"..tostring(config))
+  BotLogger.debug("PathsModule"..tostring(config))
   if config then
 
     local loadFunc = function()
@@ -356,7 +346,7 @@ function PathsModule.loadPaths(file, force)
 
       --if not force then
       --  currentFileLoaded = file
-      --  CandyBot.changeOption(UI.LoadList:getId(), file)
+      --  ShaykieBot.changeOption(UI.LoadList:getId(), file)
       --end
     end
 
@@ -449,7 +439,9 @@ function parsePaths(config)
 end
 
 function PathsModule.executeAction(actionFunct)
-  Action.doActionForPlayer(g_game.getLocalPlayer(), 'Action.'..actionFunct)
+  if actionFunct ~= '' and actionFunct ~= nil then
+    Action.doActionForPlayer('Action.'..actionFunct)
+  end
 end
 
 return PathsModule

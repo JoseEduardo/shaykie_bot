@@ -79,7 +79,7 @@ end
 -- methods
 
 function CandyListener:connect()
-  if CandyBot.isEnabled() then
+  if ShaykieBot.isEnabled() then
     self.connections[ListenerConnection.connect](self.id)
     connected = true
   end

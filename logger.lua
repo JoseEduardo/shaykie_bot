@@ -21,8 +21,8 @@ local logWindow
 local printLogs
 
 function BotLogger.init()
-  logWindow = CandyBot.getUI():recursiveGetChildById('logWindow')
-  printLogs = CandyBot.getUI():recursiveGetChildById('PrintLogs')
+  logWindow = ShaykieBot.getUI():recursiveGetChildById('logWindow')
+  printLogs = ShaykieBot.getUI():recursiveGetChildById('PrintLogs')
   logBuffer = logWindow:getChildById('logBuffer')
 end
 

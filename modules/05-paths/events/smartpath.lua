@@ -8,6 +8,7 @@
 ]]
 
 local currIndex = 0;
+local currCommand = ""
 
 PathsModule.SmartPath = {}
 SmartPath = PathsModule.SmartPath
@@ -132,8 +133,14 @@ function SmartPath.checkPathing(dirs, override, dontChange)
     local posWalk  = currPath.target
     
     if player:autoWalk( posWalk ) then
+      if currCommand ~= '' then
+        PathsModule.executeAction(currCommand)
+      end
+
       if currPath.command ~= '' then
-        PathsModule.executeAction(currPath.command)
+        currCommand = currPath.command
+      else
+        currCommand = ''
       end
 
       BotLogger.debug("Success walk: ".. postostring(posWalk) )

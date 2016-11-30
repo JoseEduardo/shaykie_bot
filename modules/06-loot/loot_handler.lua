@@ -10,13 +10,13 @@ function LootModule.getModuleId()
   return "LootModule"
 end
 
-PvpModule.dependencies = {
+LootModule.dependencies = {
   "BotModule"
 }
 
 --[[ Default Options ]]
 
-PvpModule.options = {
+LootModule.options = {
   --
 }
 
@@ -48,4 +48,4 @@ function LootModule.stop()
 end
 
 -- Start Module
-PvpModule.init()
+LootModule.init()

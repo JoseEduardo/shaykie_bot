@@ -19,14 +19,14 @@ function PvpModule.setPanel(panel) Panel = panel end
 
 function PvpModule.init()
   -- create tab
-  local botTabBar = CandyBot.window:getChildById('botTabBar')
+  local botTabBar = ShaykieBot.window:getChildById('botTabBar')
   local tab = botTabBar:addTab(tr('PvP'))
 
   local tabPanel = botTabBar:getTabPanel(tab)
   local tabBuffer = tabPanel:getChildById('tabBuffer')
   Panel = g_ui.loadUI('pvp.otui', tabBuffer)
 
-  PvpModule.parentUI = CandyBot.window
+  PvpModule.parentUI = ShaykieBot.window
   PvpModule.loadUI(Panel)
 
   -- register module

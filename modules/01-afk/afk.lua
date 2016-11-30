@@ -26,7 +26,7 @@ function AfkModule.init()
   alertListWindow = AlertList.getPanel()
 
   -- create tab
-  local botTabBar = CandyBot.window:getChildById('botTabBar')
+  local botTabBar = ShaykieBot.window:getChildById('botTabBar')
   local tab = botTabBar:addTab(tr('AFK'))
 
   local tabPanel = botTabBar:getTabPanel(tab)
@@ -41,7 +41,7 @@ function AfkModule.init()
     autoEatSelect:addOption(name)
   end
 
-  AfkModule.parentUI = CandyBot.window
+  AfkModule.parentUI = ShaykieBot.window
 
   -- register module
   Modules.registerModule(AfkModule)
@@ -70,8 +70,8 @@ end
 function AfkModule.onChooseReplaceItem(self, item)
   if item then
     Panel.ItemToReplace:setItemId(item:getId())
-    CandyBot.changeOption('ItemToReplace', item:getId())
-    CandyBot.show()
+    ShaykieBot.changeOption('ItemToReplace', item:getId())
+    ShaykieBot.show()
     return true
   end
 end

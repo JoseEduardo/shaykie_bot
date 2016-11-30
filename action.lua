@@ -5,9 +5,10 @@
 
 Action = {}
 
-function Action.doActionForPlayer(cid, function_)
+function Action.doActionForPlayer(function_)
     if type(function_) == 'string' then
         local t = _G
+        print(t)
         t.cid = cid
         local f = assert(loadstring(function_))
         setfenv(f, t)
@@ -21,25 +22,29 @@ end
 
 -- ADD BELOW
 
-function Action.talk(cid, string)
-  g_game.talk(string)
+function Action.talk(message)
+  g_game.talk(message)
 end
 
-function Action.sellItemForNpc(cid, item, qty)
+function Action.talkNPC(message)
+  g_game.talkPrivate(11, 'NPCs', message)
+end
+
+function Action.sellItemForNpc(item, qty)
   g_game.sellItem(item, qty, true)
 end
 
-function Action.sellItemForNpc(cid, item, qty, ignoreCap, buyWithBP)
+function Action.buyItemForNpc(item, qty, ignoreCap, buyWithBP)
   g_game.buyItem(item, qty, ignoreCap, buyWithBP)
 end
 
-function Action.getCapacity(cid)
+function Action.getCapacity()
   return g_game.getLocalPlayer():getFreeCapacity()
 end
 
-function Action.getQtyItem(cid, item)
+function Action.getQtyItem(item)
   local player = g_game.getLocalPlayer()
-  return player:getItem(item):getCount()
+  return player:getItemsCount(item)
 end
 
 function Action.loadPath(file)
@@ -47,18 +52,18 @@ function Action.loadPath(file)
 end
 
 --rever isso pq ta mt horrivel
-function Action.condition(cid, param1, cond, param2, ifp, elsep)
+function Action.condition(param1, cond, param2, ifp, elsep)
   if cond == '>' then
-    if Action.doActionForPlayer(cid, param1) > param2 then
-      Action.doActionForPlayer(cid, ifp)
+    if Action.doActionForPlayer(param1) > param2 then
+      Action.doActionForPlayer(ifp)
     else
-      Action.doActionForPlayer(cid, elsep)
+      Action.doActionForPlayer(elsep)
     end
   elseif cond == '<' then
-    if Action.doActionForPlayer(cid, param1) < param2 then
-      Action.doActionForPlayer(cid, ifp)
+    if Action.doActionForPlayer(param1) < param2 then
+      Action.doActionForPlayer(ifp)
     else
-      Action.doActionForPlayer(cid, elsep)
+      Action.doActionForPlayer(elsep)
     end
   end
 end
