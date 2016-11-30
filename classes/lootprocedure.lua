@@ -8,7 +8,7 @@ end
 
 LootProcedure = extends(Procedure, "LootProcedure")
 
-LootProcedure.create = function(id, position, corpse, lootlist, timeoutTicks)
+LootProcedure.create = function(id, position, corpse, timeoutTicks)
   local proc = LootProcedure.internalCreate()
 
   proc:setId(id) -- used for creature id
@@ -29,7 +29,6 @@ LootProcedure.create = function(id, position, corpse, lootlist, timeoutTicks)
   proc.container = nil
   proc.items = nil
   proc.moveProc = nil
-  proc.lootList = lootlist
 
   return proc
 end
@@ -182,11 +181,7 @@ function LootProcedure:takeNextItem()
 end
 
 function LootProcedure:checkLootList(id)
-  if string.find( self.lootList, id..";" ) then
-    return true
-  else
-    return false
-  end
+  return LootModule.checkIDForLoot(id)
 end
 
 function LootProcedure:getBestItem()

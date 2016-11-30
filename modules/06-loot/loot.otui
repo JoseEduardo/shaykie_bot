@@ -1,0 +1,182 @@
+Panel
+  id: lootPanel
+  anchors.left: parent.left
+  anchors.right: parent.right
+  anchors.top: parent.top
+  padding-right: 8
+  height: 400
+
+  BotOptionCheckBox
+    id: loot
+    width: 220
+    !text: tr('Active Loot')
+    anchors.left: parent.left
+    anchors.top: parent.top
+
+  HorizontalSeparator
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 10
+
+  Label
+    id: LabelLootList
+    text: Loot List:
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 4
+    width: 130
+
+  TextList
+    id: LootList
+    anchors.top: LabelLootList.bottom
+    anchors.left: parent.left
+    margin-bottom: 5
+    margin-top: 8
+    padding: 1
+    focusable: false
+    phantom: true
+    vertical-scrollbar: LootListScrollBar
+    width: 140
+    height: 100
+
+  VerticalScrollBar
+    id: LootListScrollBar
+    anchors.top: LootList.top
+    anchors.bottom: LootList.bottom
+    anchors.left: LootList.right
+    step: 16
+    pixels-scroll: true
+
+  Panel
+    id: LootListPanel
+    anchors.left: LootListScrollBar.left
+    anchors.right: parent.right
+    anchors.top: LootListScrollBar.top
+    anchors.bottom: LootList.bottom
+    margin-left: 20
+
+    Label
+      id: lblItemsID
+      text: Item ID:
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin-top: 4
+      width: 80
+
+    TextEdit
+      id: ItemID
+      anchors.top: prev.bottom
+      anchors.left: prev.left
+      width: 70
+
+    Label
+      text: Cap:
+      anchors.left: lblItemsID.right
+      anchors.top: lblItemsID.top
+      width: 130
+
+    TextEdit
+      id: ItemCap
+      anchors.top: ItemID.top
+      anchors.left: ItemID.right
+      margin-left: 10
+      width: 70
+
+    Button
+      id: addButton
+      !text: tr('Add Item')
+      anchors.top: ItemID.bottom
+      anchors.left: ItemID.left
+      anchors.right: ItemCap.right
+      margin-top: 3
+      enabled: true
+      @onClick: |
+        local parent = self:getParent()
+        local ItemID = parent:getChildById('ItemID')
+        local ItemCap = parent:getChildById('ItemCap')
+        TargetsModule.addLootItem(ItemID:getText(), "", ItemCap:getText())
+
+  HorizontalSeparator
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 10
+
+  Panel
+    id: SaveLoadPanel
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    anchors.bottom: parent.bottom
+
+    Label
+      text: Save & Load:
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin-top: 4
+      width: 130
+
+    TextList
+      id: LoadList
+      anchors.top: prev.bottom
+      anchors.left: prev.left
+      margin-bottom: 5
+      margin-top: 5
+      padding: 1
+      focusable: false
+      phantom: true
+      vertical-scrollbar: LoadSettingScrollBar
+      width: 190
+      height: 80
+
+    VerticalScrollBar
+      id: LoadSettingScrollBar
+      anchors.top: LoadList.top
+      anchors.bottom: LoadList.bottom
+      anchors.left: LoadList.right
+      step: 14
+      pixels-scroll: true
+
+    Button
+      id: LoadButton
+      !text: tr('Load Selected')
+      anchors.top: LoadList.bottom
+      anchors.left: LoadList.left
+      anchors.right: LoadSettingScrollBar.right
+      margin-top: 3
+      enabled: false
+      @onClick: |
+        local parent = self:getParent()
+        local focusedChild = parent:getChildById('LoadList'):getFocusedChild()
+        if focusedChild then
+          LootModule.loadLootList(focusedChild:getText())
+        end
+
+    Label
+      id: NewLabel
+      !text: tr('Name:')
+      anchors.top: LoadSettingScrollBar.top
+      anchors.left: LoadSettingScrollBar.right
+      width: 35 
+      margin-top: 2
+      margin-left: 6
+
+    TextEdit
+      id: SaveNameEdit
+      anchors.top: LoadSettingScrollBar.top
+      anchors.left: prev.right
+      anchors.right: parent.right
+      margin-left: 6
+
+    Button
+      id: SaveButton
+      !text: tr('Save Path')
+      anchors.top: prev.bottom
+      anchors.left: NewLabel.left
+      anchors.right: parent.right
+      margin-top: 8
+      @onClick: |
+        local parent = self:getParent()
+        local file = parent:getChildById('SaveNameEdit'):getText()
+        LootModule.saveLootList(file)

@@ -246,16 +246,6 @@ function PathsModule.bindHandlers()
       end
     })
 
-  connect(UI_Path.PathList, {
-    onChildFocusChange = function(self, focusedChild)
-      if focusedChild == nil then return end
-      selectedPath = PathsModule.getPaths(focusedChild.id)
-      if selectedPath then
-        PathsModule.setCurrentPath(selectedPath)
-      end
-    end
-  })
-
  connect(UI_Path.TextAction, {
     onTextChange = function(self, text, oldText)
       if selectedPath then
@@ -336,10 +326,10 @@ function PathsModule.savePaths(file)
 end
 
 function PathsModule.loadPaths(file, force)
-  BotLogger.debug("TargetsModule.loadTargets("..file..")")
+  BotLogger.debug("PathsModule.loadTargets("..file..")")
   local path = pathsDir.."/"..file
   local config = g_configs.load(path)
-  BotLogger.debug("TargetsModule"..tostring(config))
+  BotLogger.debug("PathsModule"..tostring(config))
   if config then
 
     local loadFunc = function()
