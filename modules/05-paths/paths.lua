@@ -246,6 +246,18 @@ function PathsModule.bindHandlers()
       end
     })
 
+
+  connect(UI_Path.PathList, {
+      onChildFocusChange = function(self, focusedChild)
+       if focusedChild == nil then return end
+       selectedPath = focusedChild.path
+       if selectedPath then
+        PathsModule.setCurrentPath(selectedPath)
+        selectedPath = PathsModule.getPaths(focusedChild.id)
+       end
+     end
+  })
+
  connect(UI_Path.TextAction, {
     onTextChange = function(self, text, oldText)
       if selectedPath then
