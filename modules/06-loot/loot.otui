@@ -66,9 +66,9 @@ Panel
     Label
       id: lblItemsID
       text: Item ID:
-      anchors.left: ItemLootDisplay.left
+      anchors.left: ItemLootDisplay.right
       anchors.top: ItemLootDisplay.top
-      margin-top: 4
+      margin-top: -12
       margin-left: 4
       width: 80
 

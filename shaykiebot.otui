@@ -124,7 +124,7 @@ PathMap < UIPathMap
 MainWindow
   id: botWindow
   !text: tr('ShaykieBot')
-  size: 422 605
+  size: 500 605
   @onEscape: ShaykieBot.hide()
 
   &save: true

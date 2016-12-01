@@ -100,7 +100,7 @@ function LootModule.bindHandlers()
 
   connect(UI.ItemID, {
     onTextChange = function(self, text, oldText)
-      LootModule.setItemPreview(text)
+      --LootModule.setItemPreview(text)
     end
   })
 end
