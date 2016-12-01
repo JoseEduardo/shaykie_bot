@@ -48,7 +48,7 @@ end
 
 function LootModule.loadUI(panel)
   UI = {
-    LootActive = panel:recursiveGetChildById('loot'),
+    LootActive = panel:recursiveGetChildById('lootCheckBox'),
     LootList = panel:recursiveGetChildById('LootList'),
     LoadList = panel:recursiveGetChildById('LoadList'),
     LoadButton = panel:recursiveGetChildById('LoadButton'),
@@ -57,6 +57,10 @@ function LootModule.loadUI(panel)
     ItemCap = panel:recursiveGetChildById('ItemCap'),
     ItemLootBox = panel:recursiveGetChildById('ItemLootDisplay')
   }
+end
+
+function LootModule.getEnableLoot()
+  return UI.LootActive:isChecked();
 end
 
 function LootModule.bindHandlers()

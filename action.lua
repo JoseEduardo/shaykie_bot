@@ -5,16 +5,31 @@
 
 Action = {}
 
+--DEPRECATED
+function Action.DexecuteAction(actionFunct)
+  if actionFunct ~= '' and actionFunct ~= nil then
+    local tabFuncts = Helper.explode(";", actionFunct)
+    
+    for _,func in pairs(tabFuncts) do
+      Action.doActionForPlayer('Action.'..func)
+    end   
+  end
+end
+
+function Action.executeAction(actionFunct)
+  if actionFunct ~= '' and actionFunct ~= nil then
+    Action.doActionForPlayer(actionFunct)
+  end
+end
+
 function Action.doActionForPlayer(function_)
     if type(function_) == 'string' then
         local t = _G
-        print(t)
-        t.cid = cid
         local f = assert(loadstring(function_))
         setfenv(f, t)
-        f(cid)
+        f(t)
     elseif type(function_) == 'function' then
-        function_(cid)
+        function_()
     end
 
     return nil

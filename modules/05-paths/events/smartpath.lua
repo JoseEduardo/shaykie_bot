@@ -134,7 +134,7 @@ function SmartPath.checkPathing(dirs, override, dontChange)
     
     if player:autoWalk( posWalk ) then
       if currCommand ~= '' then
-        PathsModule.executeAction(currCommand)
+        Action.executeAction(currCommand)
       end
 
       if currPath.command ~= '' then

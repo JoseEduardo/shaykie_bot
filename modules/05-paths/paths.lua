@@ -438,10 +438,4 @@ function parsePaths(config)
 
 end
 
-function PathsModule.executeAction(actionFunct)
-  if actionFunct ~= '' and actionFunct ~= nil then
-    Action.doActionForPlayer('Action.'..actionFunct)
-  end
-end
-
 return PathsModule
