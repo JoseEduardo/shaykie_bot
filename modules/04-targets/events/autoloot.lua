@@ -158,7 +158,8 @@ function AutoLoot.canLoot(creature)
   if target then
     return target:getLoot()
   end
-  return false
+
+  return LootModule.getEnableLoot()
 end
 
 function AutoLoot.onStopped()

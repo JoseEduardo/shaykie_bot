@@ -7,7 +7,7 @@ Panel
   height: 400
 
   BotOptionCheckBox
-    id: loot
+    id: lootCheckBox
     width: 220
     !text: tr('Active Loot')
     anchors.left: parent.left
