@@ -132,19 +132,23 @@ function SmartPath.checkPathing(dirs, override, dontChange)
     local currPath = getWalkPosByIndex(currIndex) 
     local posWalk  = currPath.target
     
-    if player:autoWalk( posWalk ) then
-      if currCommand ~= '' then
-        Action.executeAction(currCommand)
-      end
+    local tileToWalk = g_map.getTile(posWalk)
+    if tileToWalk and tileToWalk:isWalkable() then
+      player:stopAutoWalk()
+      if player:autoWalk( posWalk ) then
+        if currCommand ~= '' then
+          Action.executeAction(currCommand)
+        end
 
-      if currPath.command ~= '' then
-        currCommand = currPath.command
-      else
-        currCommand = ''
-      end
+        if currPath.command ~= '' then
+          currCommand = currPath.command
+        else
+          currCommand = ''
+        end
 
-      BotLogger.debug("Success walk: ".. postostring(posWalk) )
-      SmartPath.lastDest.time = currentTime
+        BotLogger.debug("Success walk: ".. postostring(posWalk) )
+        SmartPath.lastDest.time = currentTime
+      end
     end
     
     currIndex = currIndex+1

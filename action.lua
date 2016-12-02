@@ -5,17 +5,6 @@
 
 Action = {}
 
---DEPRECATED
-function Action.DexecuteAction(actionFunct)
-  if actionFunct ~= '' and actionFunct ~= nil then
-    local tabFuncts = Helper.explode(";", actionFunct)
-    
-    for _,func in pairs(tabFuncts) do
-      Action.doActionForPlayer('Action.'..func)
-    end   
-  end
-end
-
 function Action.executeAction(actionFunct)
   if actionFunct ~= '' and actionFunct ~= nil then
     Action.doActionForPlayer(actionFunct)
@@ -64,21 +53,4 @@ end
 
 function Action.loadPath(file)
   PathsModule.loadPaths(file, true)
-end
-
---rever isso pq ta mt horrivel
-function Action.condition(param1, cond, param2, ifp, elsep)
-  if cond == '>' then
-    if Action.doActionForPlayer(param1) > param2 then
-      Action.doActionForPlayer(ifp)
-    else
-      Action.doActionForPlayer(elsep)
-    end
-  elseif cond == '<' then
-    if Action.doActionForPlayer(param1) < param2 then
-      Action.doActionForPlayer(ifp)
-    else
-      Action.doActionForPlayer(elsep)
-    end
-  end
 end
