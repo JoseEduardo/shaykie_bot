@@ -40,7 +40,7 @@ function AutoTarget.scan()
   for k,v in pairs(TargetsModule.getTargets()) do
     table.insert(targetList, v:getName())
   end
-
+print('teste')
   local player = g_game.getLocalPlayer()
   local targets = player:getTargetsInArea(targetList, true)
 

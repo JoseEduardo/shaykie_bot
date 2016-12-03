@@ -1,0 +1,1 @@
+g_map.colorizeThing( g_map.getThing( g_game.getLocalPlayer():getPosition() ), "red" )

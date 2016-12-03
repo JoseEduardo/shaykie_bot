@@ -9,6 +9,7 @@
 
 local currIndex = 0;
 local currCommand = ""
+local lastPosWalk = nil
 
 PathsModule.SmartPath = {}
 SmartPath = PathsModule.SmartPath
@@ -94,7 +95,7 @@ function SmartPath.checkPathing(dirs, override, dontChange)
     BotLogger.debug("SmartPath: "..tostring(currentTime - SmartPath.lastPos.time))
     if currentTime - SmartPath.lastPos.time >= SmartPath.idleTime then
       BotLogger.debug("SmartPath: player is idle")
-      idle = true
+      --idle = true
     end
   else
     BotLogger.debug("SmartPath.lastPos.pos: " .. postostring(playerPos))
@@ -124,17 +125,19 @@ function SmartPath.checkPathing(dirs, override, dontChange)
   end
 
   if countTablePath() > 0 then
-    if currIndex > countTablePath()-1 then
+    if currIndex >= countTablePath()-1 then
       currIndex = 0
     end
 
-    player:stopAutoWalk()
     local currPath = getWalkPosByIndex(currIndex) 
     local posWalk  = currPath.target
-    
-    local tileToWalk = g_map.getTile(posWalk)
-    if tileToWalk and tileToWalk:isWalkable() then
+
+    if lastPosWalk ~= nil then
+      PathsModule.removeMark(lastPosWalk)
+    end
+    if player:getPosition().z == posWalk.z then
       player:stopAutoWalk()
+      PathsModule.addMark(posWalk)
       if player:autoWalk( posWalk ) then
         if currCommand ~= '' then
           Action.executeAction(currCommand)
@@ -147,10 +150,10 @@ function SmartPath.checkPathing(dirs, override, dontChange)
         end
 
         BotLogger.debug("Success walk: ".. postostring(posWalk) )
+        lastPosWalk = posWalk
         SmartPath.lastDest.time = currentTime
       end
-    end
-    
+    end    
     currIndex = currIndex+1
   else
     local tile = SmartPath.getBestWalkableTile(player, SmartPath.lastDir, override)
