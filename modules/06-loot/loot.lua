@@ -85,7 +85,6 @@ function LootModule.bindHandlers()
       if focusedChild:getId() ~= "new" then
         selectedTarget = LootModule.getLoot(focusedChild:getText())
         if selectedTarget then
-                  print('asdasd')
           LootModule.syncLoot(selectedTarget)
         end
       else

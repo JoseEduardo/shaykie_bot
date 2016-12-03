@@ -82,7 +82,6 @@ function Path:toNode()
 
   if self.target then
     setting = self.target
-    print(setting)
     node.target = setting
   end
 

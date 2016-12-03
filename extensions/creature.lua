@@ -52,16 +52,14 @@ function Creature:getTargetsInArea(targetList, pathableOnly)
   if g_game.isOnline() then
     creatures = g_map.getSpectators(self:getPosition(), false)
     for i, creature in ipairs(creatures) do
-      print('a1')
-      if creature:isMonster() then
+
+      --if creature:isMonster() then
         if table.contains(targetList, creature:getName():lower(), true) then
-          print('a2')
           if not pathableOnly or creature:canStandBy(self) then
-            print('a3x')
             table.insert(targets, creature)
           end
         end
-      end
+      --end
     end
   end
   return targets

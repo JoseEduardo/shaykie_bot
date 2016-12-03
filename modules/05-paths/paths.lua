@@ -147,13 +147,11 @@ function PathsModule.loadUI(panel)
 end
 
 function PathsModule.addMark(pathPos)
-  print('inseri', postostring(pathPos))
   UI_Path.Minimap:removeFlag(pathPos, 1, "teste")
   UI_Path.Minimap:addFlag(pathPos, 2, "GO")
 end
 
 function PathsModule.removeMark(pathPos)
-  print('remove', postostring(pathPos))
   UI_Path.Minimap:removeFlag(pathPos, 2, "GO")
   UI_Path.Minimap:addFlag(pathPos, 1, "teste")
 end
@@ -362,7 +360,6 @@ function PathsModule.loadPaths(file, force)
       local targets = parsePaths(config)
       for v,target in pairs(targets) do
         if target then
-          print( target )
           PathsModule.addToPathList(target)
         end
       end

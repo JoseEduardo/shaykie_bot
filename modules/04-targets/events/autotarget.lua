@@ -40,7 +40,7 @@ function AutoTarget.scan()
   for k,v in pairs(TargetsModule.getTargets()) do
     table.insert(targetList, v:getName())
   end
-print('teste')
+
   local player = g_game.getLocalPlayer()
   local targets = player:getTargetsInArea(targetList, true)
 
@@ -61,13 +61,13 @@ end
 
 function AutoTarget.addCreature(creature)
   -- Avoid adding new targets when attacking
-  if creature and creature:isMonster() then
+  --if creature and creature:isMonster() then
     --connect(creature, { onHealthPercentChange = AutoTarget.onTargetHealthChange })
     connect(creature, { onDeath = AutoLoot.onTargetDeath })
     connect(creature, { onDisappear = AutoTarget.removeCreature })
 
     AutoTarget.creatureData[creature:getId()] = creature
-  end
+  --end
 end
 
 function AutoTarget.removeCreature(creature)
