@@ -83,11 +83,25 @@ function PvpModule.bindHandlers()
   connect(Creature, {
     onHealthPercentChange = onCreatureHealthPercentChange
   })
+
+  connect(Map, {
+    onAddThingInMap = onCreateItemMap
+  })  
+end
+
+function PvpModule.onCreateItemMap(thing, pos)
+  if thing:isItem() then
+    print(thing, pos)
+  end
 end
 
 function PvpModule.terminate()
   disconnect(Creature, {
     onHealthPercentChange = onCreatureHealthPercentChange
+  })
+
+  disconnect(Map, {
+    onAddThingInMap = onCreateItemMap
   })
 
   modules.game_interface.removeMenuHook("siobot", tr("Add to sio"))
