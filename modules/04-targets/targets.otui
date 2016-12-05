@@ -322,6 +322,14 @@ Panel
         anchors.right: parent.right
         margin: 0 4 0 0
 
+  BotOptionCheckBox
+    id: ShowHuntMobKilled
+    width: 100
+    !text: tr('Show mob killed')
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 10
+
   HorizontalSeparator
     anchors.left: parent.left
     anchors.right: parent.right

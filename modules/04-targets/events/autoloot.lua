@@ -30,6 +30,7 @@ end
 
 function AutoLoot.onTargetDeath(creature)
   if AutoLoot.canLoot(creature) then
+
     local creatureId = creature:getId()
     local creaturePos = creature:getPosition()
     

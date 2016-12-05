@@ -1,0 +1,13 @@
+HUDLabel < UILabel
+  font: verdana-11px-rounded
+  width: 300
+HUDItem < UIItem
+  size: 45 45
+  padding: 1
+  font: verdana-11px-rounded
+  text-align: bottom
+  border-color: white
+  color: white
+
+  $disabled:
+    color: #646464

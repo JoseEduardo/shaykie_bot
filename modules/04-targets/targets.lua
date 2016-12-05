@@ -10,6 +10,7 @@ dofiles('events')
 
 local Panel = {}
 local UI = {}
+local mobsKilleds = {}
 
 local targetsDir = ShaykieBot.getWriteDir().."/targets"
 local selectedTarget
@@ -657,6 +658,26 @@ function TargetsModule.addFile(file)
         anchor=AnchorHorizontalCenter}, yesCallback, noCallback)
     end
   })
+end
+
+function TargetsModule.addMobKilled(name)
+  if TargetsModule.getPanel():getChildById('ShowHuntMobKilled'):isChecked() then
+    if mobsKilleds[name] then
+      mobsKilleds[name] = mobsKilleds[name]+1
+    else
+      mobsKilleds[name] = 1      
+    end
+  end
+end
+
+function TargetsModule.printMobsKilled()
+  HudModule.clear()
+  for mob,qty in pairs(mobsKilleds) do
+    HudModule.addText(mob..": "..qty, "lbl"..mob, "green")
+  end
+--[[
+  HudModule.addItem(itemId, count)
+  ]]
 end
 
 function TargetsModule.refresh()
