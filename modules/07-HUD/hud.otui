@@ -1,6 +1,7 @@
 HUDLabel < UILabel
   font: verdana-11px-rounded
   width: 300
+  
 HUDItem < UIItem
   size: 45 45
   padding: 1

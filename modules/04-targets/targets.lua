@@ -11,6 +11,7 @@ dofiles('events')
 local Panel = {}
 local UI = {}
 local mobsKilleds = {}
+local lastAdded = {}
 
 local targetsDir = ShaykieBot.getWriteDir().."/targets"
 local selectedTarget
@@ -57,7 +58,7 @@ function TargetsModule.init()
 
   -- setup refresh event
   TargetsModule.refresh()
-  refreshEvent = cycleEvent(TargetsModule.refresh, 8000)
+  refreshEvent = cycleEvent(TargetsModule.refresh, 30000)
 
   -- register module
   Modules.registerModule(TargetsModule)
@@ -69,6 +70,8 @@ end
 
 function TargetsModule.terminate()
   TargetsModule.stop()
+
+  mobsKilleds = {}
 
   g_keyboard.unbindKeyPress('Up', UI.TargetsPanel)
   g_keyboard.unbindKeyPress('Down', UI.TargetsPanel)
@@ -660,20 +663,26 @@ function TargetsModule.addFile(file)
   })
 end
 
-function TargetsModule.addMobKilled(name)
+function TargetsModule.addMobKilled(name, creatureID)
   if TargetsModule.getPanel():getChildById('ShowHuntMobKilled'):isChecked() then
+    if lastAdded[creatureID] then
+      return false
+    end
+
     if mobsKilleds[name] then
       mobsKilleds[name] = mobsKilleds[name]+1
     else
       mobsKilleds[name] = 1      
     end
+    lastAdded[creatureID] = 1
+    TargetsModule.printMobsKilled()
   end
 end
 
 function TargetsModule.printMobsKilled()
   HudModule.clear()
   for mob,qty in pairs(mobsKilleds) do
-    HudModule.addText(mob..": "..qty, "lbl"..mob, "green")
+    HudModule.addText(mob..": "..qty, nil, "green")
   end
 --[[
   HudModule.addItem(itemId, count)

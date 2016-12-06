@@ -324,7 +324,7 @@ Panel
 
   BotOptionCheckBox
     id: ShowHuntMobKilled
-    width: 100
+    width: 250
     !text: tr('Show mob killed')
     anchors.left: parent.left
     anchors.top: prev.bottom

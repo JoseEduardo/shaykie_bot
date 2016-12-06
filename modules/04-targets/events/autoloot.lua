@@ -29,9 +29,9 @@ function AutoLoot.onStopped()
 end
 
 function AutoLoot.onTargetDeath(creature)
+  local creatureId = creature:getId()
+  TargetsModule.addMobKilled(creature:getName(), creatureId)
   if AutoLoot.canLoot(creature) then
-
-    local creatureId = creature:getId()
     local creaturePos = creature:getPosition()
     
     AutoLoot.lootList[creatureId] = {

@@ -1,11 +1,29 @@
-hud = {}
-hud.widgets = {}
+HudModule = {}
+HudModule.widgets = {}
+
+local UI = {}
+local Panel = {
+  --
+}
+
+-- load module events
+dofiles('events')
 
 -- incremento = 202/286
 local map = modules.game_interface.getMapPanel()
 
+function HudModule.getPanel() return Panel end
+function HudModule.setPanel(panel) Panel = panel end
+function HudModule.getUI() return UI end
+
+function HudModule.init()
+    Panel = g_ui.loadUI('hud.otui')
+
+    Modules.registerModule(HudModule)
+end
+
 function HudModule.updatePosition(old, new)
-    for k,v in pairs(hud.widgets) do
+    for k,v in pairs(HudModule.widgets) do
         v:setX(((583 - new.height)*(202/286)) + 200)
     end
 end
@@ -23,7 +41,7 @@ function HudModule.addText(text, id, color)
     if id then
         label:setId(id)
     else
-        label:setId(#hud.widgets)
+        label:setId(#HudModule.widgets)
     end
     if color then
         if color == "red" then label:setColor("#FF0000") end
@@ -34,12 +52,12 @@ function HudModule.addText(text, id, color)
     end
     label:setText(text)
     label:setX(((583 - map:getSize().height)*(202/286)) + 200)
-    if #hud.widgets > 0 then
+    if #HudModule.widgets > 0 then
         label:addAnchor(AnchorTop, "prev", AnchorBottom)
     end
     label:hide()
     label:show()
-    table.insert(hud.widgets, label)
+    table.insert(HudModule.widgets, label)
     return label
 end
 
@@ -53,17 +71,20 @@ function HudModule.addItem(id, count)
     if count then
         item:setText(tostring(count))
     end
-    if #hud.widgets > 0 then
+    if #HudModule.widgets > 0 then
         item:addAnchor(AnchorTop, "prev", AnchorBottom)
     end
     item:hide()
     item:show()
-    table.insert(hud.widgets, item)
+    table.insert(HudModule.widgets, item)
     return item
 end
+
 function HudModule.clear()
-    for k,v in pairs(hud.widgets) do
+    for k,v in pairs(HudModule.widgets) do
         v:destroy()
     end
-    hud.widgets = {}
+    HudModule.widgets = {}
 end
+
+return HudModule

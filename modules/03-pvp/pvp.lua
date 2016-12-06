@@ -84,12 +84,13 @@ function PvpModule.bindHandlers()
     onHealthPercentChange = onCreatureHealthPercentChange
   })
 
-  connect(Map, {
+  connect(g_game, {
     onAddThingInMap = onCreateItemMap
   })  
 end
 
 function PvpModule.onCreateItemMap(thing, pos)
+  print('aaaa')
   if thing:isItem() then
     print(thing, pos)
   end
@@ -100,7 +101,7 @@ function PvpModule.terminate()
     onHealthPercentChange = onCreatureHealthPercentChange
   })
 
-  disconnect(Map, {
+  disconnect(g_game, {
     onAddThingInMap = onCreateItemMap
   })
 

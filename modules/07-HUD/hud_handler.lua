@@ -3,7 +3,7 @@
   @Details: 
 ]]
 
-dofile('loot.lua')
+dofile('hud.lua')
 
 -- required by the event handler
 function HudModule.getModuleId()
