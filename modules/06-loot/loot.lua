@@ -95,10 +95,10 @@ function LootModule.bindHandlers()
 
   modules.game_interface.addMenuHook("lootbot", tr("Add to Loot List"), 
     function(menuPosition, lookThing, useThing, creatureThing)
-      print('Obter o ID do Item')
+      TargetsModule.addLootItem(useThing:getId(), "", 100)
     end,
     function(menuPosition, lookThing, useThing, creatureThing)
-      return lookThing ~= nil and lookThing:getTile() ~= nil
+      return useThing ~= nil and useThing:isItem() ~= nil
     end)
 
   connect(UI.ItemID, {
