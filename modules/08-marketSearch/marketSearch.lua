@@ -50,7 +50,6 @@ function initProtocol()
   end
 end
 
---REGISTRA OS EVENTOS
 function registerProtocol()
     ProtocolGame.registerOpcode(GameServerOpcodes.GameServerMarketBrowse, parseMarketBrowse)
 end
@@ -59,7 +58,6 @@ function unregisterProtocol()
     ProtocolGame.unregisterOpcode(GameServerOpcodes.GameServerMarketBrowse, parseMarketBrowse)
 end
 
---RECEBE E TRATA O EVENTO APO CHAMA-LO
 local function parseMarketBrowse(protocol, msg)
   local var = msg:getU16()
   local offers = {}
@@ -89,14 +87,12 @@ local function onMarketBrowse(offers)
     MarketSearchModule.procNextItem(nextID)
 end
 
---VALIDA SE A OFERTA EH MENOR QUE A DOS NPCS
 local function checkOffer(offer)
     local price = offer:getPrice()
     local amount = offer:getAmount()
     local timestamp = offer:getTimeStamp()
     local itemName = offer:getItem():getMarketData().name
 
-    --compare price com o preco do npc
     if price < currItem.PRICE then
         Market.acceptMarketOffer(amount, MarketAction.Buy, 'Buy')
         --Market.acceptMarketOffer(amount, timestamp, 'Buy')

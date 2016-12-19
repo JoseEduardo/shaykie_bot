@@ -209,6 +209,6 @@ AttackModes = {
 
 
 ItensToBuy = {
-  '0' = {ID = 7414, PRICE = 20000},
-  '1' = {ID = 19358, PRICE = 1500}
+  ['0'] = {ID = 7414, PRICE = 20000},
+  ['1'] = {ID = 19358, PRICE = 1500}
 }
