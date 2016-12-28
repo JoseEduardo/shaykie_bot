@@ -73,6 +73,14 @@ Panel
     anchors.left: AutoEatSelect.left
     anchors.top: prev.top
 
+  BotOptionCheckBox
+    id: FishingOnAttack
+    width: 120
+    !text: tr('Fishing on Attack')
+    !tooltip: tr('Continue fishing on attacking.')
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+
   HorizontalSeparator
     anchors.left: parent.left
     anchors.right: parent.right

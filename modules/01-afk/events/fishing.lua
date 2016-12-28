@@ -10,7 +10,7 @@ function AutoFishing.Event(event)
   if g_game.isOnline() then
     local player = g_game.getLocalPlayer()
     -- Check if we are attacking
-    if g_game.isAttacking() then
+    if g_game.isAttacking() and not AfkModule.getPanel():getChildById('FishingOnAttack'):isChecked() then
       return Helper.safeDelay(3000, 6000)
     end
 

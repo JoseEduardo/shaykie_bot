@@ -3,7 +3,7 @@ MarketSearchModule.widgets = {}
 
 local currItem = nil
 local currID = 0
-local startedProc = false
+MarketSearchModule.startedProc = false
 local UI = {}
 local Panel = {
   --
@@ -20,17 +20,20 @@ function MarketSearchModule.setPanel(panel) Panel = panel end
 function MarketSearchModule.getUI() return UI end
 
 function MarketSearchModule.init()
-    Panel = g_ui.loadUI('marketSearch.otui')
+  -- create tab
+  local botTabBar = ShaykieBot.window:getChildById('botTabBar')
+  local tab = botTabBar:addTab(tr('Market'))
 
-    Modules.registerModule(MarketSearchModule)
-    initProtocol()
+  local tabPanel = botTabBar:getTabPanel(tab)
+  local tabBuffer = tabPanel:getChildById('tabBuffer')
+  Panel = g_ui.loadUI('marketSearch.otui', tabBuffer)
+
+  MarketSearchModule.parentUI = ShaykieBot.window
+
+  Modules.registerModule(MarketSearchModule)
+  --initProtocol()
 end
 
-function MarketSearchModule.updatePosition(old, new)
-    for k,v in pairs(MarketSearchModule.widgets) do
-        v:setX(((583 - new.height)*(202/286)) + 200)
-    end
-end
 function MarketSearchModule.online()
     map.onGeometryChange = MarketSearchModule.updatePosition
     g_ui.loadUI("marketSearch")
@@ -58,7 +61,7 @@ function unregisterProtocol()
     ProtocolGame.unregisterOpcode(GameServerOpcodes.GameServerMarketBrowse, parseMarketBrowse)
 end
 
-local function parseMarketBrowse(protocol, msg)
+function parseMarketBrowse(protocol, msg)
   local var = msg:getU16()
   local offers = {}
 
@@ -76,9 +79,9 @@ local function parseMarketBrowse(protocol, msg)
   return true
 end
 
-local function onMarketBrowse(offers)
+function MarketSearchModule.onMarketBrowse(offers)
     for i = 1, #offers do
-        if checkOffer(offers[i]) then
+        if MarketSearchModule.checkOffer(offers[i]) then
             break
         end
     end
@@ -87,14 +90,14 @@ local function onMarketBrowse(offers)
     MarketSearchModule.procNextItem(nextID)
 end
 
-local function checkOffer(offer)
+function MarketSearchModule.checkOffer(offer)
     local price = offer:getPrice()
     local amount = offer:getAmount()
     local timestamp = offer:getTimeStamp()
     local itemName = offer:getItem():getMarketData().name
 
     if price < currItem.PRICE then
-        Market.acceptMarketOffer(amount, MarketAction.Buy, 'Buy')
+        MarketSearchModule.acceptOffer(amount, MarketAction.Buy, 'Buy')
         --Market.acceptMarketOffer(amount, timestamp, 'Buy')
 
         print('BUY: '..itemName..', coins: '..price)
@@ -103,23 +106,55 @@ local function checkOffer(offer)
     return false
 end
 
+function MarketSearchModule.acceptOffer(amount, timestamp, counter)
+  if g_game.getFeature(GamePlayerMarket) then
+    local msg = OutputMessage.create()
+    msg:addU8(ClientOpcodes.ClientMarketAccept)
+    msg:addU32(timestamp)
+    msg:addU16(counter)
+    msg:addU16(amount)
+    send(msg)
+  else
+    g_logger.error('MarketProtocol.sendMarketAcceptOffer does not support the current protocol.')
+  end
+end
+
 function MarketSearchModule.startProcess()
-    startProcess = true
-    currID = 0
-    MarketSearchModule.procNextItem(currID)
+    MarketSearchModule.startProcess = true
+    MarketSearchModule.procNextItem(0)
 end
 
 function MarketSearchModule.stopProcess()
-    startProcess = false
+    MarketSearchModule.startProcess = false
 end
 
 function MarketSearchModule.procNextItem(index)
-    if startedProc == false then return false end
+    --if MarketSearchModule.startedProc == false then return false end
+
     if index > countTableItensToBuy()-1 then index = 0 end
 
     currItem = ItensToBuy[index]
     local browseId = currItem.ID
-    MarketProtocol.sendMarketBrowse(browseId)
+    MarketSearchModule.sendMarketBrowse(browseId)
+end
+
+local function send(msg)
+  local protocol = g_game.getProtocolGame()
+  if protocol then
+    print('M')
+    protocol:send(msg)
+  end
+end
+
+function MarketSearchModule.sendMarketBrowse(browseId)
+  if g_game.getFeature(GamePlayerMarket) then
+    local msg = OutputMessage.create()
+    msg:addU8(ClientOpcodes.ClientMarketBrowse)
+    msg:addU16(browseId)
+    send(msg)
+  else
+    g_logger.error('MarketProtocol.sendMarketBrowse does not support the current protocol.')
+  end
 end
 
 function countTableItensToBuy()
