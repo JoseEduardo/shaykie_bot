@@ -1312,7 +1312,7 @@ function Market.checkOffer(offer)
       if price < currPriceArr then
           local priceTmp = currPriceArr - price
           if priceTmp >= 1000 then
-            --Market.acceptMarketOffer(amount, timestamp, offer:getCounter())
+            Market.acceptMarketOffer(amount, timestamp, offer:getCounter())
             print('BUY: '..itemName..', coins: '..price..', '..amount)
             return true
           end
