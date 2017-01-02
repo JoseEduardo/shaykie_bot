@@ -1311,9 +1311,13 @@ function Market.checkOffer(offer)
     if offerType ~= MarketAction.Buy then
       if price < currPriceArr then
           local priceTmp = currPriceArr - price
-          if priceTmp >= 1000 then
+          if priceTmp >= 500 then
             Market.acceptMarketOffer(amount, timestamp, offer:getCounter())
-            print('BUY: '..itemName..', coins: '..price..', '..amount)
+
+            local file = io.open("buyLogs.log", "a")
+            file:write(os.date("%x %H:%M:%S")..': BUY: '..itemName..', coins: '..price..', amount:'..amount..', original price:'..currPriceArr.."\n")
+            print('BUY: '..itemName..', coins: '..price..', amount:'..amount..', original price:'..currPriceArr)
+            file:close()
             return true
           end
       end
@@ -1332,7 +1336,12 @@ function Market.procNextItem()
 
   currItem = ItensToBuy[currIndexMkt]
   currPriceArr = currItem.PRICE
+
+  local file = io.open("buyLogs.log", "a")
+  file:write(os.date("%x %H:%M:%S")..': Search:'..currItem.ID..'  '..currPriceArr.."\n")
   print('Search:', currItem.ID, currPriceArr)
+  file:close()
+
   Market.selectItem( currItem.ID )
 end
 
