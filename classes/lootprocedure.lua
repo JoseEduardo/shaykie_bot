@@ -161,20 +161,30 @@ function LootProcedure:takeNextItem()
   local item = self:getBestItem()
   if item then
     local toPos = {x=65535, y=64, z=0} -- TODO: get container with free space
-    self.moveProc = MoveProcedure.create(item, toPos, true, 8000)
-    connect(self.moveProc, { onFinished = function(id)
-      BotLogger.debug("connection: MoveProcedure.onFinished")
-      self:removeItem(id)
-      self:takeNextItem()
-    end })
 
-    -- TODO: add configuration to say what to do when timed out
-    connect(self.moveProc, { onTimedOut = function(id)
-      BotLogger.debug("connection: MoveProcedure.onTimedOut")
-      self:removeItem(id)
-      self:takeNextItem()
-    end })
-    self.moveProc:start()
+    if BotModule.isPrecisionMode() then
+      self.moveProc = MoveProcedure.create(item, toPos, true, 8000)
+      connect(self.moveProc, { onFinished = function(id)
+        BotLogger.debug("connection: MoveProcedure.onFinished")
+        self:removeItem(id)
+        self:takeNextItem()
+      end })
+
+      -- TODO: add configuration to say what to do when timed out
+      connect(self.moveProc, { onTimedOut = function(id)
+        BotLogger.debug("connection: MoveProcedure.onTimedOut")
+        self:removeItem(id)
+        self:takeNextItem()
+      end })
+      self.moveProc:start()
+    else
+      for k,i in pairs(self.items) do
+        local checkItem = self:checkLootList(i:getId())
+        if checkItem then
+          MoveProcedure.create(i, toPos, false):start()
+        end
+      end
+    end
   else
     self:finish()
   end

@@ -72,31 +72,39 @@ end
 function MoveProcedure:tryMove()
   self:stopTryMove()
   
-  if self:isTimedOut() then return end
+  --if self:isTimedOut() then return end
   g_game.move(self.thing, self.position, self.thing:getCount())
-  if self.thing:getId() == 3031 then
-    local player = g_game.getLocalPlayer()
-    if player:getItemsCount(3031) >= 100 then
-      local item = g_game.findPlayerItem(3031, -1)
-      g_game.use(item)
-    end
-  end
-  
-  -- the move has been called schedule finish
-  local wait = (g_game.getPing()*1.5)
-  if wait > 0 then
-    self.tryMoveEvent = scheduleEvent(function() 
-      if self:isTimedOut() then return end
-
-      -- TODO: Fix verification
-      if not self.verify or self:verifyMoved() then
-        self:finish()
-      else
-        self:tryMove()
+  if BotModule.isPrecisionMode() then
+    if self.thing:getId() == 3031 then
+      local player = g_game.getLocalPlayer()
+      if player:getItemsCount(3031) >= 100 then
+        local item = g_game.findPlayerItem(3031, -1)
+        g_game.use(item)
       end
-    end, wait)
+    end
+    
+    -- the move has been called schedule finish
+    local wait = (g_game.getPing()*1.5)
+    if wait > 0 then
+      self.tryMoveEvent = scheduleEvent(function() 
+        if self:isTimedOut() then return end
+
+        -- TODO: Fix verification
+        if not self.verify or self:verifyMoved() then
+          self:finish()
+        else
+          self:tryMove()
+        end
+      end, wait)
+    else
+      self:finish()
+    end
   else
-    self:finish()
+    if not self.verify or self:verifyMoved() then
+      self:finish()
+    else
+      self:tryMove()
+    end
   end
 end
 
