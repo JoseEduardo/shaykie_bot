@@ -10,7 +10,7 @@ Panel
     id: AntiPush
     width: 220
     !text: tr('Active anti-push')
-    !tooltip: tr('Drop GP and Worm in posicion on press CTRL+E.')
+    !tooltip: tr('Drop GP and Worm in posicion on press CTRL+2.')
     anchors.left: parent.left
     anchors.top: parent.top
 

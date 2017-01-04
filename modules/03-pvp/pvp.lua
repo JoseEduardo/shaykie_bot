@@ -43,8 +43,100 @@ function PvpModule.loadUI(panel)
   }
 end
 
+function PvpModule.moveAllFromStack(direction)
+  if not g_game.isOnline() then
+    return
+  end
+
+  local player = g_game.getLocalPlayer()
+  local playerPos = player:getPosition()
+  
+  local steps = 1
+  if direction == 'WEST' then
+    playerPos.x = playerPos.x - steps
+  elseif direction == 'EAST' then
+    playerPos.x = playerPos.x + steps
+  elseif direction == 'NORTH' then
+    playerPos.y = playerPos.y - steps
+  elseif direction == 'SOUTH' then
+    playerPos.y = playerPos.y + steps
+  elseif direction == 'NORTHWEST' then
+    playerPos.x = playerPos.x - steps
+    playerPos.y = playerPos.y - steps
+  elseif direction == 'NORTHEAST' then
+    playerPos.x = playerPos.x + steps
+    playerPos.y = playerPos.y - steps
+  elseif direction == 'SOUTHWEST' then
+    playerPos.x = playerPos.x - steps
+    playerPos.y = playerPos.y + steps
+  elseif direction == 'SOUTHEAST' then
+    playerPos.x = playerPos.x + steps
+    playerPos.y = playerPos.y + steps
+  end
+
+  local tile = g_map.getTile(playerPos)
+  local items = tile:getThings()
+
+  for _, item in ipairs(items) do
+    local mousePosition = g_window.getMousePosition()
+    local mousePositionWgt = modules.game_interface.getRootPanel():recursiveGetChildByPos(mousePosition, false)
+    if mousePositionWgt then
+      local toTile = mousePositionWgt:getTile(mousePosition)
+      if toTile then
+        local count = 1
+        if not item:isCreature() then
+          count = item:getCount()
+        end
+        g_game.move(item, toTile:getPosition(), count)
+        player:autoWalk( playerPos )
+      end
+    end
+  end
+end
+
 function PvpModule.bindHandlers()
-  g_keyboard.bindKeyPress('Ctrl+E', function()
+  g_keyboard.bindKeyPress('Shift+Numpad2', function() PvpModule.moveAllFromStack('SOUTH') end)
+  g_keyboard.bindKeyPress('Shift+Numpad8', function() PvpModule.moveAllFromStack('NORTH')end)
+  g_keyboard.bindKeyPress('Shift+Numpad4', function() PvpModule.moveAllFromStack('WEST') end)
+  g_keyboard.bindKeyPress('Shift+Numpad6', function() PvpModule.moveAllFromStack('EAST')end)
+  g_keyboard.bindKeyPress('Shift+Numpad1', function() PvpModule.moveAllFromStack('SOUTHWEST') end)
+  g_keyboard.bindKeyPress('Shift+Numpad7', function() PvpModule.moveAllFromStack('NORTHWEST')end)
+  g_keyboard.bindKeyPress('Shift+Numpad3', function() PvpModule.moveAllFromStack('SOUTHEAST') end)
+  g_keyboard.bindKeyPress('Shift+Numpad9', function() PvpModule.moveAllFromStack('NORTHEAST')end)
+
+  g_keyboard.bindKeyPress('Ctrl+3', function()
+    if not g_game.isOnline() then
+      return
+    end
+
+    local mousePosition = g_window.getMousePosition()
+    local mousePositionWgt = modules.game_interface.getRootPanel():recursiveGetChildByPos(mousePosition, false)
+    if mousePositionWgt then
+      local tileCreature = mousePositionWgt:getTile(mousePosition)
+      local things =  tileCreature:getThings()
+      for _, thing in ipairs(things) do
+        local count = 1
+        if thing:getCount() ~= nil then
+          count = thing:getCount()
+        end
+
+        local origPos = tileCreature:getPosition()
+        origPos.x = origPos.x+1
+        g_game.move(thing, origPos, count)
+
+        origPos.y = origPos.y+1
+        g_game.move(thing, origPos, count)
+
+        origPos.x = origPos.x-2
+        g_game.move(thing, origPos, count)
+
+        origPos.y = origPos.y-2
+        g_game.move(thing, origPos, count)
+      end
+    end
+  end)
+
+  g_keyboard.bindKeyPress('Ctrl+2', function()
     if not g_game.isOnline() then
       return
     end
@@ -70,6 +162,30 @@ function PvpModule.bindHandlers()
     end
   end)
 
+  g_keyboard.bindKeyPress('Ctrl+1', function()
+    if not g_game.isOnline() then
+      return
+    end
+
+    local player = g_game.getLocalPlayer()
+    local mypos = player:getPosition()
+    local tile = g_map.getTile(mypos)
+    local items = tile:getItems()
+
+    for _, item in ipairs(items) do
+      if not item:isNotMoveable() then
+        local mousePosition = g_window.getMousePosition()
+        local mousePositionWgt = modules.game_interface.getRootPanel():recursiveGetChildByPos(mousePosition, false)
+        if mousePositionWgt then
+          local toTile = mousePositionWgt:getTile(mousePosition)
+          if toTile then
+            g_game.move(item, toTile:getPosition(), item:getCount())
+          end
+        end
+      end
+    end
+  end)
+
   modules.game_interface.addMenuHook("siobot", tr("Add to sio"), 
     function(menuPosition, lookThing, useThing, creatureThing)
       if creatureThing ~= nil then
@@ -90,7 +206,6 @@ function PvpModule.bindHandlers()
 end
 
 function PvpModule.onCreateItemMap(thing, pos)
-  print('aaaa')
   if thing:isItem() then
     print(thing, pos)
   end
