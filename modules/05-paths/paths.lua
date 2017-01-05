@@ -365,10 +365,7 @@ function PathsModule.loadPaths(file, force)
       end
       UI_Path.PathList:focusNextChild()
 
-      --if not force then
-      --  currentFileLoaded = file
-      --  ShaykieBot.changeOption(UI.LoadList:getId(), file)
-      --end
+      ShaykieBot.changeOption(UI_Path.LoadList:getId(), file)
     end
 
     if force then

@@ -338,6 +338,7 @@ function LootModule.loadLootList(file, force)
         end
       end
       UI.LootList:focusNextChild()
+      ShaykieBot.changeOption(UI.LoadList:getId(), file)
     end
 
     if force then

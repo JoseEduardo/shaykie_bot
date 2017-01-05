@@ -323,12 +323,13 @@ Panel
         margin: 0 4 0 0
 
   BotOptionCheckBox
-    id: ShowHuntMobKilled
+    id: ShowMobK
     width: 250
     !text: tr('Show mob killed')
     anchors.left: parent.left
     anchors.top: prev.bottom
     margin-top: 10
+    @onCheckChange: ShaykieBot.changeOption(self:getId(), self:isChecked())
 
   HorizontalSeparator
     anchors.left: parent.left

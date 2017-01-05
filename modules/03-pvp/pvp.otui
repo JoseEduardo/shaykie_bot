@@ -49,6 +49,14 @@ Panel
     step: 16
     pixels-scroll: true
 
+  Label
+    id: HealthLabel
+    !text: tr('On health lower than:')
+    anchors.right: parent.right
+    anchors.bottom: HealListScrollBar.top
+    margin-left: 18
+    margin-bottom: 5
+
   BotOptionHorizontalScrollBar
     id: HealBar
     width: 150
@@ -59,3 +67,64 @@ Panel
     symbol: %
     minimum: 1
     maximum: 100
+
+  HorizontalSeparator
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: HealList.bottom
+    margin-top: 10
+
+  BotOptionCheckBox
+    id: AutoManaShield
+    width: 220
+    !text: tr('Active auto mana shield')
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+
+  Label
+    id: HealthLabelMin
+    !text: tr('On health lower than:')
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 5
+    margin-bottom: 2
+
+  BotOptionHorizontalScrollBar
+    id: HealthBarMin
+    width: 150
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 8
+    mouse-scroll: false
+    show-value: true
+    symbol: %
+    minimum: 1
+    maximum: 100
+
+  Label
+    id: HealthLabelMax
+    !text: tr('Remove ring upon reaching life:')
+    anchors.right: parent.right
+    anchors.top: HealthLabelMin.top
+
+  BotOptionHorizontalScrollBar
+    id: HealthBarMax
+    width: 150
+    anchors.right: parent.right
+    anchors.top: HealthBarMin.top
+    mouse-scroll: false
+    show-value: true
+    symbol: %
+    minimum: 1
+    maximum: 100
+
+  BotOptionComboBox
+    id: ActionToExec
+    anchors.left: HealthBarMin.left
+    anchors.top: HealthBarMin.bottom
+    anchors.verticalCenter: next.verticalCenter
+    margin-left: 5
+    width: 152
+    mouse-scroll: false
+    margin-top: 2
+    margin-left: -1

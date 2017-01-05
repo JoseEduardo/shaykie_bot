@@ -664,7 +664,7 @@ function TargetsModule.addFile(file)
 end
 
 function TargetsModule.addMobKilled(name, creatureID)
-  if TargetsModule.getPanel():getChildById('ShowHuntMobKilled'):isChecked() then
+  if TargetsModule.getPanel():getChildById('ShowMobK'):isChecked() then
     if lastAdded[creatureID] then
       return false
     end

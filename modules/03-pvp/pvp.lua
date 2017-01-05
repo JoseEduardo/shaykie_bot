@@ -13,6 +13,7 @@ local Panel = {
 }
 
 local UI = {}
+local playerPush = {}
 
 function PvpModule.getPanel() return Panel end
 function PvpModule.setPanel(panel) Panel = panel end
@@ -76,6 +77,7 @@ function PvpModule.moveAllFromStack(direction)
 
   local tile = g_map.getTile(playerPos)
   local items = tile:getThings()
+  local playerToMove = nil
 
   for _, item in ipairs(items) do
     local mousePosition = g_window.getMousePosition()
@@ -86,11 +88,20 @@ function PvpModule.moveAllFromStack(direction)
         local count = 1
         if not item:isCreature() then
           count = item:getCount()
+        else
+          playerToMove = item
         end
         g_game.move(item, toTile:getPosition(), count)
-        player:autoWalk( playerPos )
       end
     end
+  end
+
+  if playerToMove ~= nil then 
+    playerPush = {
+      targetPos = playerPos,
+      creatureName = playerToMove:getName(),
+      posPlayer = player:getPosition()
+    }
   end
 end
 
@@ -200,9 +211,14 @@ function PvpModule.bindHandlers()
     onHealthPercentChange = onCreatureHealthPercentChange
   })
 
+  connect(Creature, {
+    onPositionChange = onMovePlayerDest
+  })
+
   connect(g_game, {
     onAddThingInMap = onCreateItemMap
-  })  
+  })
+
 end
 
 function PvpModule.onCreateItemMap(thing, pos)
@@ -214,6 +230,10 @@ end
 function PvpModule.terminate()
   disconnect(Creature, {
     onHealthPercentChange = onCreatureHealthPercentChange
+  })
+
+  disconnect(Creature, {
+    onPositionChange = onMovePlayerDest
   })
 
   disconnect(g_game, {
@@ -237,6 +257,31 @@ function onCreatureHealthPercentChange(creature, health)
       PvpModule.doHealFriend(creature);
     end
   end
+end
+
+function onMovePlayerDest(creature, newPos, oldPos)
+  if not g_game.isOnline() then
+    return
+  end
+  if playerPush.creatureName == nil then
+    return false
+  end
+
+  if creature ~= nil then
+    if creature:getName() ~= playerPush.creatureName then
+      return false
+    end
+
+    local player = g_game.getLocalPlayer()
+    local posPlayer = player:getPosition()
+    if posPlayer.x ~= playerPush.posPlayer.x or posPlayer.y ~= playerPush.posPlayer.y or posPlayer.z ~= playerPush.posPlayer.z then
+      return false
+    end
+
+    player:autoWalk( playerPush.targetPos )
+    playerPush = {}
+  end
+
 end
 
 function PvpModule.checkCreatures()

@@ -124,7 +124,7 @@ PathMap < UIPathMap
 MainWindow
   id: botWindow
   !text: tr('ShaykieBot')
-  size: 700 605
+  size: 500 605
   @onEscape: ShaykieBot.hide()
 
   &save: true
@@ -250,7 +250,7 @@ MainWindow
 
   Label
     id: versionInfo
-    !text: tr('v0.1 Alpha')
+    !text: tr('v0.5 Alpha')
     anchors.right: hideButton.left
     anchors.bottom: parent.bottom
     margin-bottom: -5
