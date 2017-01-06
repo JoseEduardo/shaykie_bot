@@ -55,6 +55,7 @@ function LootModule.loadUI(panel)
     SaveNameEdit = panel:recursiveGetChildById('SaveNameEdit'),
     ItemID = panel:recursiveGetChildById('ItemID'),
     ItemCap = panel:recursiveGetChildById('ItemCap'),
+    ItemBp = panel:recursiveGetChildById('ItemBp'),
     ItemLootBox = panel:recursiveGetChildById('ItemLootDisplay')
   }
 end
@@ -95,7 +96,7 @@ function LootModule.bindHandlers()
 
   modules.game_interface.addMenuHook("lootbot", tr("Add to Loot List"), 
     function(menuPosition, lookThing, useThing, creatureThing)
-      TargetsModule.addLootItem(useThing:getId(), "", 100)
+      TargetsModule.addLootItem(useThing:getId(), "", 100, "backpack")
     end,
     function(menuPosition, lookThing, useThing, creatureThing)
       return useThing ~= nil and useThing:isItem() ~= nil
@@ -116,9 +117,11 @@ function LootModule.syncLoot(loot)
   if loot == nil then
     UI.ItemID:setText("")
     UI.ItemCap:setText("")
+    UI.ItemBp:setText("")
   else
     UI.ItemID:setText(loot:getId())
     UI.ItemCap:setText(loot:getCap())
+    UI.ItemBp:setText(loot:getBp())
   end
 end
 
@@ -153,7 +156,7 @@ function LootModule.checkIDForLoot(idItem)
     if child:getId() ~= "new" then
       local t = child.lootItem
       if t:getId() == idItem then
-        return true
+        return t
       end
     end
   end
@@ -161,8 +164,8 @@ function LootModule.checkIDForLoot(idItem)
   return false
 end
 
-function TargetsModule.addLootItem(id, name, cap)
-  local loot = Loot.create(id, id, cap)
+function TargetsModule.addLootItem(id, name, cap, bp)
+  local loot = Loot.create(id, id, cap, bp)
   LootModule.addItemToLoot(loot)
   return loot
 end

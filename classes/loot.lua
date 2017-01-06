@@ -11,12 +11,13 @@ end
 
 Loot = extends(CandyConfig, "Loot")
 
-Loot.create = function(id, name, cap)
+Loot.create = function(id, name, cap, bp)
   local loot = Loot.internalCreate()
   
   loot.id = id or 0
   loot.name = name or ""
   loot.cap = cap or 0
+  loot.bp = bp or ""
   
   return loot
 end
@@ -58,6 +59,17 @@ function Loot:setCap(cap)
     self.cap = cap
     
     signalcall(self.onSettingsChange, self, cap, oldcap)
+  end
+end
+
+function Loot:getBp()
+  return self.bp
+end
+
+function Loot:setBp(bp)
+  local oldBp = self.bp
+  if bp ~= oldBp then
+    self.bp = bp
   end
 end
 

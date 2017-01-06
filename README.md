@@ -12,6 +12,8 @@ SHIFT+NUMPAD Auto Push item and target player to mouse position, move localPlaye
 CTRL+1 Move all iten in player position to mouse position
 CTRL+2 Drop GP and Worm to PlayerPosition
 
+Tem que deixar as Bp´s abertas pra funcionar o loot
+
 [![Join the chat at https://gitter.im/BenDol/otclient-shaykiebot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/BenDol/otclient-shaykiebot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ShaykieBot is an OTClient bot module that helps with Tibia game-play automation. ShaykieBot is designed to focus on efficiency, stability and safety (from bot-detection). It accomplishes these qualities using, modular style framework, thorough testing, and secure/safe 'game' functions + time delay randomization when logged into Cipsoft Servers.

@@ -158,49 +158,36 @@ function LootProcedure:loot(container, prevContainer)
 end
 
 function LootProcedure:takeNextItem()
+  local item = self:getBestItem()
+  if item then
     local toPos = {x=65535, y=64, z=0} -- TODO: get container with free space
 
     if BotModule.isPrecisionMode() then
-      local item = self:getBestItem()
-      if item then
-        self.moveProc = MoveProcedure.create(item, toPos, true, 8000)
-        connect(self.moveProc, { onFinished = function(id)
-          BotLogger.debug("connection: MoveProcedure.onFinished")
-          self:removeItem(id)
-          self:takeNextItem()
-        end })
+      self.moveProc = MoveProcedure.create(item, toPos, true, 8000)
+      connect(self.moveProc, { onFinished = function(id)
+        BotLogger.debug("connection: MoveProcedure.onFinished")
+        self:removeItem(id)
+        self:takeNextItem()
+      end })
 
-        -- TODO: add configuration to say what to do when timed out
-        connect(self.moveProc, { onTimedOut = function(id)
-          BotLogger.debug("connection: MoveProcedure.onTimedOut")
-          self:removeItem(id)
-          self:takeNextItem()
-        end })
-        self.moveProc:start()
-      else
-        self:finish()
-      end
+      -- TODO: add configuration to say what to do when timed out
+      connect(self.moveProc, { onTimedOut = function(id)
+        BotLogger.debug("connection: MoveProcedure.onTimedOut")
+        self:removeItem(id)
+        self:takeNextItem()
+      end })
+      self.moveProc:start()
     else
       for k,i in pairs(self.items) do
         local checkItem = self:checkLootList(i:getId())
         if checkItem then
-          local bpToPos = LootProcedure:getCorrespondingBp(checkItem:getBp())
-          if bpToPos then 
-            MoveProcedure.create(i, toPos, false):start()
-          end
+          MoveProcedure.create(i, toPos, false):start()
         end
       end
     end
-end
-
-function LootProcedure:getCorrespondingBp(name)
-  for containerId, container in pairs(g_game.getContainers()) do
-
-    if container:getName() == name then
-      return container:getSlotPosition()
-    end
+  else
+    self:finish()
   end
-  return false
 end
 
 function LootProcedure:checkLootList(id)

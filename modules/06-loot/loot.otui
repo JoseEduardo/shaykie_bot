@@ -79,15 +79,29 @@ Panel
       width: 70
 
     Label
+      id: lblItemsCap
       text: Cap:
       anchors.left: lblItemsID.right
       anchors.top: lblItemsID.top
-      width: 130
+      width: 80
 
     TextEdit
       id: ItemCap
       anchors.top: ItemID.top
       anchors.left: ItemID.right
+      margin-left: 10
+      width: 70
+
+    Label
+      text: Backpack:
+      anchors.left: lblItemsCap.right
+      anchors.top: lblItemsCap.top
+      width: 130
+
+    TextEdit
+      id: ItemBp
+      anchors.top: ItemCap.top
+      anchors.left: ItemCap.right
       margin-left: 10
       width: 70
 
@@ -103,7 +117,8 @@ Panel
         local parent = self:getParent()
         local ItemID = parent:getChildById('ItemID')
         local ItemCap = parent:getChildById('ItemCap')
-        TargetsModule.addLootItem(ItemID:getText(), "", ItemCap:getText())
+        local ItemBp = parent:getChildById('ItemBp')
+        TargetsModule.addLootItem(ItemID:getText(), "", ItemCap:getText(), ItemBp:getText())
 
   HorizontalSeparator
     anchors.left: parent.left
