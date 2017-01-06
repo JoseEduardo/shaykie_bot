@@ -91,7 +91,12 @@ function PvpModule.moveAllFromStack(direction)
         else
           playerToMove = item
         end
-        g_game.move(item, toTile:getPosition(), count)
+        if item:getId() == 3043 then
+          local toPos = {x=65535, y=64, z=0}
+          g_game.move(item, toPos, count)
+        else
+          g_game.move(item, toTile:getPosition(), count)
+        end
       end
     end
   end
@@ -173,7 +178,7 @@ function PvpModule.bindHandlers()
     end
   end)
 
-  g_keyboard.bindKeyPress('Ctrl+1', function()
+  g_keyboard.bindKeyPress('Shift+Numpad5', function()
     if not g_game.isOnline() then
       return
     end
@@ -185,12 +190,18 @@ function PvpModule.bindHandlers()
 
     for _, item in ipairs(items) do
       if not item:isNotMoveable() then
-        local mousePosition = g_window.getMousePosition()
-        local mousePositionWgt = modules.game_interface.getRootPanel():recursiveGetChildByPos(mousePosition, false)
-        if mousePositionWgt then
-          local toTile = mousePositionWgt:getTile(mousePosition)
-          if toTile then
-            g_game.move(item, toTile:getPosition(), item:getCount())
+
+        if item:getId() == 3043 then
+          local toPos = {x=65535, y=64, z=0}
+          g_game.move(item, toPos, item:getCount())
+        else
+          local mousePosition = g_window.getMousePosition()
+          local mousePositionWgt = modules.game_interface.getRootPanel():recursiveGetChildByPos(mousePosition, false)
+          if mousePositionWgt then
+            local toTile = mousePositionWgt:getTile(mousePosition)
+            if toTile then
+              g_game.move(item, toTile:getPosition(), item:getCount())
+            end
           end
         end
       end
