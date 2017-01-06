@@ -184,10 +184,9 @@ function LootProcedure:takeNextItem()
       for k,i in pairs(self.items) do
         local checkItem = self:checkLootList(i:getId())
         if checkItem then
-          local bpToPos = LootProcedure:getCorrespondingBp(checkItem:getBp())
-          if bpToPos then 
-            MoveProcedure.create(i, toPos, false):start()
-          end
+          local posBP = checkItem:getBp()
+          toPos.y = toPos.y-tonumber(posBP)
+          MoveProcedure.create(i, toPos, false):start()
         end
       end
     end
