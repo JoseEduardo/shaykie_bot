@@ -94,6 +94,33 @@ function LootModule.bindHandlers()
     end
   })
 
+  connect(Container, {
+    onOpen = function(container, prevContainer)
+      if LootModule.getEnableLoot() ~= true then
+        return false
+      end
+
+      if not string.find(container:getName(), 'dead') then
+        return false
+      end
+
+      local itemsBP = container:getItems()
+
+      local toPos = {x=65535, y=64, z=0}
+      for k,i in pairs(itemsBP) do
+        local checkItem = LootProcedure:checkLootList(i:getId())
+        if checkItem then
+          local posBP = checkItem:getBp()
+          if posBP ~= '' or type(posBP) == "number" then
+            toPos.y = toPos.y-tonumber(posBP)
+          end
+          --LootModule.moveItemToBP(i, toPos, i:getCount())
+          scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, Helper.safeDelay(1000, 3000))
+        end
+      end
+    end
+  })
+
   modules.game_interface.addMenuHook("lootbot", tr("Add to Loot List"), 
     function(menuPosition, lookThing, useThing, creatureThing)
       TargetsModule.addLootItem(useThing:getId(), "", 100, 0)
@@ -107,6 +134,10 @@ function LootModule.bindHandlers()
       --LootModule.setItemPreview(text)
     end
   })
+end
+
+function LootModule.moveItemToBP(item, toPos, count)
+  g_game.move(item, toPos, count)
 end
 
 function LootModule.setItemPreview(itemID)

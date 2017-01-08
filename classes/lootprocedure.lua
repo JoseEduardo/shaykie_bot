@@ -79,7 +79,7 @@ function LootProcedure:start()
         self:fail() -- failed to loot
       end
     end
-    connect(Container, { onOpen = self.hook })
+    --connect(Container, { onOpen = self.hook })
 
     -- Run to corpse for looting
     local openFunc = function()
@@ -284,7 +284,7 @@ function LootProcedure:clean()
     disconnect(Container, { onOpen = self.hook })
     self.hook = nil
   end
-
+  disconnect(Container, { onOpen = hookDirect })
   disconnect(self, "onContainerOpened")
 
   signalcall(self.onCleaned, self.id)
