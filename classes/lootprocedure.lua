@@ -185,7 +185,9 @@ function LootProcedure:takeNextItem()
         local checkItem = self:checkLootList(i:getId())
         if checkItem then
           local posBP = checkItem:getBp()
-          toPos.y = toPos.y-tonumber(posBP)
+          if posBP ~= '' or type(posBP) == "number" then
+            toPos.y = toPos.y-tonumber(posBP)
+          end          
           MoveProcedure.create(i, toPos, false):start()
         end
       end

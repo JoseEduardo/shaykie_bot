@@ -71,7 +71,7 @@ end
 -- TODO: This needs to be reworked
 function MoveProcedure:tryMove()
   self:stopTryMove()
-  
+
   --if self:isTimedOut() then return end
   g_game.move(self.thing, self.position, self.thing:getCount())
   if BotModule.isPrecisionMode() then
