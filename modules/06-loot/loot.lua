@@ -116,14 +116,14 @@ function LootModule.bindHandlers()
           scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, Helper.safeDelay(1000, 3000))
         else
           local checkItem = LootProcedure:checkLootList(i:getId())
-          --if checkItem then
+          if checkItem then
             local posBP = checkItem:getBp()
             if posBP ~= '' or type(posBP) == "number" then
               toPos.y = toPos.y-tonumber(posBP)
             end
             --LootModule.moveItemToBP(i, toPos, i:getCount())
             scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, Helper.safeDelay(1000, 3000))
-          --end
+          end
         end
       end
     end
@@ -194,7 +194,7 @@ function LootModule.checkIDForLoot(idItem)
   for idx,child in pairs(t) do
     if child:getId() ~= "new" then
       local t = child.lootItem
-      if t:getId() == idItem then
+      if t:getId() == idItem or t:getId() == 'all' then
         return t
       end
     end
