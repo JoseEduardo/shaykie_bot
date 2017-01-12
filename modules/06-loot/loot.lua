@@ -104,18 +104,26 @@ function LootModule.bindHandlers()
         return false
       end
 
+      local freePush = false
       local itemsBP = container:getItems()
+      if string.find(container:getName(), 'human') then
+        freePush = true
+      end
 
       local toPos = {x=65535, y=64, z=0}
       for k,i in pairs(itemsBP) do
-        local checkItem = LootProcedure:checkLootList(i:getId())
-        if checkItem then
-          local posBP = checkItem:getBp()
-          if posBP ~= '' or type(posBP) == "number" then
-            toPos.y = toPos.y-tonumber(posBP)
-          end
-          --LootModule.moveItemToBP(i, toPos, i:getCount())
+        if freePush then
           scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, Helper.safeDelay(1000, 3000))
+        else
+          local checkItem = LootProcedure:checkLootList(i:getId())
+          --if checkItem then
+            local posBP = checkItem:getBp()
+            if posBP ~= '' or type(posBP) == "number" then
+              toPos.y = toPos.y-tonumber(posBP)
+            end
+            --LootModule.moveItemToBP(i, toPos, i:getCount())
+            scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, Helper.safeDelay(1000, 3000))
+          --end
         end
       end
     end
