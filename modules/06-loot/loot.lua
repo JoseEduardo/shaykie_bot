@@ -133,8 +133,8 @@ function LootModule.processLoot(itemsBP, freePush)
     local toPos = {x=65535, y=64, z=math.random(0,7)}
     for k,i in pairs(itemsBP) do
       if freePush then
-        LootModule.moveItemToBP(i, toPos, i:getCount())
-        --scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, math.random(1000, 3000))
+        --LootModule.moveItemToBP(i, toPos, i:getCount())
+        scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, math.random(1000, 3000))
       else
         local checkItem = LootProcedure:checkLootList(i:getId())
         if checkItem then
@@ -142,8 +142,8 @@ function LootModule.processLoot(itemsBP, freePush)
           if posBP ~= '' or type(posBP) == "number" then
             toPos.y = toPos.y-tonumber(posBP)
           end
-          LootModule.moveItemToBP(i, toPos, i:getCount())
-          --scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, math.random(1000, 3000))
+          --LootModule.moveItemToBP(i, toPos, i:getCount())
+          scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, math.random(1000, 3000))
         end
       end
     end

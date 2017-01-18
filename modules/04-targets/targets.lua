@@ -248,6 +248,18 @@ function TargetsModule.bindHandlers()
   g_keyboard.bindKeyPress('Down', function() 
       UI.TargetList:focusNextChild(KeyboardFocusReason) 
     end, UI.TargetsPanel)
+
+  modules.game_interface.addMenuHook("targeting", tr("Add Target"), 
+    function(menuPosition, lookThing, useThing, creatureThing)
+      if creatureThing ~= nil then
+        TargetsModule.addNewTarget(creatureThing:getName())
+      end
+    end,
+    function(menuPosition, lookThing, useThing, creatureThing)
+      return lookThing ~= nil and lookThing:getTile() ~= nil
+    end) 
+
+
 end
 
 function TargetsModule.onStopEvent(eventId)
