@@ -40,7 +40,11 @@ function PvpModule.loadUI(panel)
   UI = {
     AntiPush = panel:recursiveGetChildById('AntiPush'),
     HealList = panel:recursiveGetChildById('HealList'),
-    HealBar = panel:recursiveGetChildById('HealBar')
+    HealBar = panel:recursiveGetChildById('HealBar'),
+
+    AutoManaShield = panel:recursiveGetChildById('AutoManaShield'),
+    HealthBarMin = panel:recursiveGetChildById('HealthBarMin'),
+    HealthBarMax = panel:recursiveGetChildById('HealthBarMax')
   }
 end
 
@@ -230,6 +234,11 @@ function PvpModule.bindHandlers()
     onAddThingInMap = onCreateItemMap
   })
 
+
+  connect(LocalPlayer, {
+   onHealthChange = activeManaShield
+  })
+
 end
 
 function PvpModule.onCreateItemMap(thing, pos)
@@ -249,6 +258,10 @@ function PvpModule.terminate()
 
   disconnect(g_game, {
     onAddThingInMap = onCreateItemMap
+  })
+
+  disconnect(LocalPlayer, {
+    onHealthChange = activeManaShield
   })
 
   modules.game_interface.removeMenuHook("siobot", tr("Add to sio"))
@@ -329,6 +342,48 @@ function PvpModule.doHealFriend(creature)
       delay = Helper.getSpellDelay('exura sio')
     end
 
+end
+
+function PvpModule.equipeManaShieldRing()
+ if g_game.isOnline() then
+    local player = g_game.getLocalPlayer()
+    local selectedItem = 3052
+
+    local item = player:getItem(selectedItem)
+    local slot = InventorySlotFinger
+    
+    local handPos = {['x'] = 65535, ['y'] = slot, ['z'] = 0}
+    if player:getInventoryItem(slot) and player:getInventoryItem(slot):getCount() > 5 then
+      return 10000
+    end
+
+    if item and not player:getInventoryItem(slot) then
+      g_game.move(item, handPos, item:getCount())
+    end
+  end
+end
+
+function PvpModule.removeManaShieldRing()
+ if g_game.isOnline() then
+    local player = g_game.getLocalPlayer()
+    local slot = InventorySlotFinger
+    
+    local bpPos = {['x'] = 65535, ['y'] = 64, ['z'] = 0}
+    if player:getInventoryItem(slot) then
+      g_game.move(player:getInventoryItem(slot), bpPos, item:getCount())
+    end
+  end
+end
+
+function activeManaShield(player, health, maxHealth, oldHealth)
+  if UI.AutoManaShield:isChecked() then
+    if player:getHealthPercent() <= UI.HealthBarMin:getValue() then
+      PvpModule.equipeManaShieldRing()
+    end
+    if player:getHealthPercent() >= UI.HealthBarMax:getValue() then
+
+    end
+  end
 end
 
 function PvpModule.addCreatureToSio(id, name)

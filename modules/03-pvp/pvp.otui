@@ -117,14 +117,3 @@ Panel
     symbol: %
     minimum: 1
     maximum: 100
-
-  BotOptionComboBox
-    id: ActionToExec
-    anchors.left: HealthBarMin.left
-    anchors.top: HealthBarMin.bottom
-    anchors.verticalCenter: next.verticalCenter
-    margin-left: 5
-    width: 152
-    mouse-scroll: false
-    margin-top: 2
-    margin-left: -1
