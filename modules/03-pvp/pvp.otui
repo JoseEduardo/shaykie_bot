@@ -117,3 +117,203 @@ Panel
     symbol: %
     minimum: 1
     maximum: 100
+
+  HorizontalSeparator
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: HealthBarMax.bottom
+    margin-top: 10
+
+  Item
+    id: CurrentHelmetPvEHelmet
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 5
+    virtual: true
+
+  Button
+    id: SelectHelmetPvEHelmet
+    !text: tr('Hel')
+    width: 70
+    height: 34
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+
+  Item
+    id: CurrentHelmetPvEArmor
+    anchors.left: CurrentHelmetPvEHelmet.right
+    anchors.top: CurrentHelmetPvEHelmet.top
+    margin-left: 2
+    virtual: true
+
+  Button
+    id: SelectHelmetPvEArmor
+    !text: tr('Arm')
+    width: 70
+    height: 34
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+
+  Item
+    id: CurrentHelmetPvELegs
+    anchors.left: CurrentHelmetPvEArmor.right
+    anchors.top: CurrentHelmetPvEArmor.top
+    margin-left: 2
+    virtual: true
+
+  Button
+    id: SelectHelmetPvELegs
+    !text: tr('Leg')
+    width: 70
+    height: 34
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+
+  Item
+    id: CurrentHelmetPvEBoots
+    anchors.left: CurrentHelmetPvELegs.right
+    anchors.top: CurrentHelmetPvELegs.top
+    margin-left: 2
+    virtual: true
+
+  Button
+    id: SelectHelmetPvEBoots
+    !text: tr('Boo')
+    width: 70
+    height: 34
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+
+  Item
+    id: CurrentHelmetPvELeftHand
+    anchors.left: CurrentHelmetPvEBoots.right
+    anchors.top: CurrentHelmetPvEBoots.top
+    margin-left: 2
+    virtual: true
+
+  Button
+    id: SelectHelmetPvELeftHand
+    !text: tr('LHa')
+    width: 70
+    height: 34
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+
+  Item
+    id: CurrentHelmetPvERightHand
+    anchors.left: SelectHelmetPvELeftHand.right
+    anchors.top: SelectHelmetPvELeftHand.top
+    margin-left: 2
+    virtual: true
+
+  Button
+    id: SelectHelmetPvERightHand
+    !text: tr('LHa')
+    width: 70
+    height: 34
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+
+
+  Item
+    id: CurrentHelmetPvPHelmet
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-top: 5
+    margin-left: 20
+    virtual: true
+
+  Button
+    id: SelectHelmetPvPHelmet
+    !text: tr('Hel')
+    width: 70
+    height: 34
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+
+  Item
+    id: CurrentHelmetPvPArmor
+    anchors.left: CurrentHelmetPvPHelmet.right
+    anchors.top: CurrentHelmetPvPHelmet.top
+    margin-left: 2
+    virtual: true
+
+  Button
+    id: SelectHelmetPvPArmor
+    !text: tr('Arm')
+    width: 70
+    height: 34
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+
+  Item
+    id: CurrentHelmetPvPLegs
+    anchors.left: CurrentHelmetPvPArmor.right
+    anchors.top: CurrentHelmetPvPArmor.top
+    margin-left: 2
+    virtual: true
+
+  Button
+    id: SelectHelmetPvPLegs
+    !text: tr('Leg')
+    width: 70
+    height: 34
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+
+  Item
+    id: CurrentHelmetPvPBoots
+    anchors.left: CurrentHelmetPvPLegs.right
+    anchors.top: CurrentHelmetPvPLegs.top
+    margin-left: 2
+    virtual: true
+
+  Button
+    id: SelectHelmetPvPBoots
+    !text: tr('Boo')
+    width: 70
+    height: 34
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+
+  Item
+    id: CurrentHelmetPvPLeftHand
+    anchors.left: CurrentHelmetPvPBoots.right
+    anchors.top: CurrentHelmetPvPBoots.top
+    margin-left: 2
+    virtual: true
+
+  Button
+    id: SelectHelmetPvPLeftHand
+    !text: tr('LHa')
+    width: 70
+    height: 34
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+
+  Item
+    id: CurrentHelmetPvPRightHand
+    anchors.left: SelectHelmetPvPLeftHand.right
+    anchors.top: SelectHelmetPvPLeftHand.top
+    margin-left: 2
+    virtual: true
+
+  Button
+    id: SelectHelmetPvPRightHand
+    !text: tr('LHa')
+    width: 70
+    height: 34
+    anchors.left: prev.left
+    anchors.top: prev.bottom
+    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
