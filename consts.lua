@@ -10,6 +10,16 @@ RestoreType = {
   item = 2
 }
 
+InventorySlotBot = {
+  InventorySlotHead,
+  InventorySlotBody,
+  InventorySlotRight,
+  InventorySlotLeft,
+  InventorySlotLeg,
+  InventorySlotFeet,
+  InventorySlotAmmo
+}
+
 Potions = {
   ['Ultimate HP'] = 8473,
   ['Great HP'] = 7591,

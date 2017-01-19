@@ -125,195 +125,162 @@ Panel
     margin-top: 10
 
   Item
-    id: CurrentHelmetPvEHelmet
     anchors.left: parent.left
     anchors.top: prev.bottom
     margin-top: 5
     virtual: true
 
   Button
-    id: SelectHelmetPvEHelmet
+    id: PvEHelmet
     !text: tr('Hel')
     width: 70
     height: 34
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
 
   Item
-    id: CurrentHelmetPvEArmor
-    anchors.left: CurrentHelmetPvEHelmet.right
-    anchors.top: CurrentHelmetPvEHelmet.top
     margin-left: 2
     virtual: true
 
   Button
-    id: SelectHelmetPvEArmor
+    id: PvEArmor
     !text: tr('Arm')
     width: 70
     height: 34
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
 
   Item
-    id: CurrentHelmetPvELegs
-    anchors.left: CurrentHelmetPvEArmor.right
-    anchors.top: CurrentHelmetPvEArmor.top
     margin-left: 2
     virtual: true
 
   Button
-    id: SelectHelmetPvELegs
+    id: PvELegs
     !text: tr('Leg')
     width: 70
     height: 34
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
 
   Item
-    id: CurrentHelmetPvEBoots
-    anchors.left: CurrentHelmetPvELegs.right
-    anchors.top: CurrentHelmetPvELegs.top
     margin-left: 2
     virtual: true
 
   Button
-    id: SelectHelmetPvEBoots
+    id: PvEBoots
     !text: tr('Boo')
     width: 70
     height: 34
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
 
   Item
-    id: CurrentHelmetPvELeftHand
-    anchors.left: CurrentHelmetPvEBoots.right
-    anchors.top: CurrentHelmetPvEBoots.top
     margin-left: 2
     virtual: true
 
   Button
-    id: SelectHelmetPvELeftHand
+    id: PvELeftHand
     !text: tr('LHa')
     width: 70
     height: 34
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
 
   Item
-    id: CurrentHelmetPvERightHand
-    anchors.left: SelectHelmetPvELeftHand.right
-    anchors.top: SelectHelmetPvELeftHand.top
+    anchors.left: SelectPvELeftHand.right
+    anchors.top: SelectPvELeftHand.top
     margin-left: 2
     virtual: true
 
   Button
-    id: SelectHelmetPvERightHand
+    id: PvERightHand
     !text: tr('LHa')
     width: 70
     height: 34
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
 
 
   Item
-    id: CurrentHelmetPvPHelmet
-    anchors.left: prev.right
-    anchors.top: prev.top
-    margin-top: 5
     margin-left: 20
     virtual: true
 
   Button
-    id: SelectHelmetPvPHelmet
+    id: PvPHelmet
     !text: tr('Hel')
     width: 70
     height: 34
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
 
   Item
-    id: CurrentHelmetPvPArmor
-    anchors.left: CurrentHelmetPvPHelmet.right
-    anchors.top: CurrentHelmetPvPHelmet.top
     margin-left: 2
     virtual: true
 
   Button
-    id: SelectHelmetPvPArmor
+    id: PvPArmor
     !text: tr('Arm')
     width: 70
     height: 34
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
 
   Item
-    id: CurrentHelmetPvPLegs
-    anchors.left: CurrentHelmetPvPArmor.right
-    anchors.top: CurrentHelmetPvPArmor.top
     margin-left: 2
     virtual: true
 
   Button
-    id: SelectHelmetPvPLegs
+    id: PvPLegs
     !text: tr('Leg')
     width: 70
     height: 34
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
 
   Item
-    id: CurrentHelmetPvPBoots
-    anchors.left: CurrentHelmetPvPLegs.right
-    anchors.top: CurrentHelmetPvPLegs.top
     margin-left: 2
     virtual: true
 
   Button
-    id: SelectHelmetPvPBoots
+    id: PvPBoots
     !text: tr('Boo')
     width: 70
     height: 34
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
 
   Item
-    id: CurrentHelmetPvPLeftHand
-    anchors.left: CurrentHelmetPvPBoots.right
-    anchors.top: CurrentHelmetPvPBoots.top
     margin-left: 2
     virtual: true
 
   Button
-    id: SelectHelmetPvPLeftHand
+    id: PvPLeftHand
     !text: tr('LHa')
     width: 70
     height: 34
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
 
   Item
-    id: CurrentHelmetPvPRightHand
-    anchors.left: SelectHelmetPvPLeftHand.right
-    anchors.top: SelectHelmetPvPLeftHand.top
     margin-left: 2
     virtual: true
 
   Button
-    id: SelectHelmetPvPRightHand
+    id: PvPRightHand
     !text: tr('LHa')
     width: 70
     height: 34
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(SupportModule.onChooseHealthItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)

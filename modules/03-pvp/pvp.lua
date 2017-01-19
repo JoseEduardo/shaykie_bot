@@ -14,6 +14,7 @@ local Panel = {
 
 local UI = {}
 local playerPush = {}
+local setCurrType = 'PvE'
 
 function PvpModule.getPanel() return Panel end
 function PvpModule.setPanel(panel) Panel = panel end
@@ -115,6 +116,8 @@ function PvpModule.moveAllFromStack(direction)
 end
 
 function PvpModule.bindHandlers()
+  g_keyboard.bindKeyPress('Ctrl+Shift+Q', function() PvpModule.changeSet(setCurrType) end)
+
   g_keyboard.bindKeyPress('Shift+Numpad2', function() PvpModule.moveAllFromStack('SOUTH') end)
   g_keyboard.bindKeyPress('Shift+Numpad8', function() PvpModule.moveAllFromStack('NORTH')end)
   g_keyboard.bindKeyPress('Shift+Numpad4', function() PvpModule.moveAllFromStack('WEST') end)
@@ -239,6 +242,29 @@ function PvpModule.bindHandlers()
    onHealthChange = activeManaShield
   })
 
+end
+
+function PvpModule.changeSet(type)
+ if g_game.isOnline() then
+    local player = g_game.getLocalPlayer()
+
+    local bpPos = {['x'] = 65535, ['y'] = 64, ['z'] = 0}
+    for _, inventSlot in ipairs(InventorySlotBot) do
+      local currItemEquiped = player:getInventoryItem(inventSlot)
+      if currItemEquiped then
+        g_game.move(, bpPos, currItemEquiped:getCount())
+      end
+
+      local selectedItem = "Current"..type..""..InventorySlotStyles[inventSlot]
+      local item = player:getItem(selectedItem:setItemId())
+      local invPos = {['x'] = 65535, ['y'] = inventSlot, ['z'] = 0}
+      if item and not player:getInventoryItem(inventSlot) then
+        g_game.move(item, invPos, item:getCount())
+      end
+    end
+
+    if setCurrType == 'PvE' then setCurrType = 'PvP' else setCurrType = 'PvE' end
+  end
 end
 
 function PvpModule.onCreateItemMap(thing, pos)
@@ -383,6 +409,17 @@ function activeManaShield(player, health, maxHealth, oldHealth)
     if player:getHealthPercent() >= UI.HealthBarMax:getValue() then
 
     end
+  end
+end
+
+function PvpModule.onChooseItem(self, item)
+  if item then
+    local name = 'CurrentHelmetPvPLeftHand'
+    local curItem = panel:recursiveGetChildById(name)
+    curItem:setItemId(item:getId())
+    ShaykieBot.changeOption(name, item:getId())
+    ShaykieBot.show()
+    return true
   end
 end
 
