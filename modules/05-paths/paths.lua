@@ -11,6 +11,9 @@ dofiles('events')
 local Panel = {}
 UI_Path = {}
 
+local currIndexWaypoint = 0;
+local lastPosWalk = nil
+
 local currentIndexPath
 local selectedPath
 local refreshEvent
@@ -137,7 +140,8 @@ function PathsModule.loadUI(panel)
     LoadList = panel:recursiveGetChildById('LoadList'),
     LoadButton = panel:recursiveGetChildById('LoadButton'),
     Minimap = panel:recursiveGetChildById('PathMap'),
-    TextAction = panel:recursiveGetChildById('actionText')
+    TextAction = panel:recursiveGetChildById('actionText'),
+    Waypoint = panel:recursiveGetChildById('StartWayPoint')
   }
 
   -- Load image resources
@@ -225,6 +229,77 @@ function PathsModule.updateCameraPosition()
   if not UI_Path.PathMap:isDragging() then
     UI_Path.PathMap:setCameraPosition(player:getPosition())
     UI_Path.PathMap:setCrossPosition(player:getPosition())
+  end
+
+  if Waypoint:isChecked() then
+    if pos == lastPosWalk or lastPosWalk == nil then
+      currIndexWaypoint += 1
+      PathsModule.processNextWaypoint()
+    end
+  end
+end
+
+function PathsModule.countTablePath()
+  local count = 0
+  local t = UI_Path.PathList:getChildren()
+
+  for i,v in ipairs(t) do
+    count = count+1
+  end
+
+  return count
+end
+
+
+function PathsModule.getWalkPosByIndex(pos)
+  local index = 0;
+  local returnItem = nil;
+  local t = UI_Path.PathList:getChildren()
+
+  for i,v in ipairs(t) do
+    if index == pos then
+      returnItem = v.path
+      break
+    end
+    index = index+1;
+  end
+  
+  return returnItem
+end
+
+function PathsModule.processNextWaypoint()
+  local countWP = PathsModule.countTablePath()
+  if countWP <= 0 then
+    return false
+  end
+
+  local player = g_game.getLocalPlayer()
+  if currIndexWaypoint >= countWP-1 then
+    currIndexWaypoint = 0
+  end
+
+  local currPath = PathsModule.getWalkPosByIndex(currIndexWaypoint)
+  local posWalk  = currPath.target
+  
+  if lastPosWalk ~= nil then
+    PathsModule.removeMark(lastPosWalk)
+  end
+
+  if player:getPosition().z == posWalk.z then
+    player:stopAutoWalk()
+    PathsModule.addMark(posWalk)
+    if currPath.command ~= '' then
+      Action.executeAction(currPath.command)
+      currIndexWaypoint += 1
+
+      PathsModule.processNextWaypoint()
+    else
+      if player:autoWalk( posWalk ) then
+        BotLogger.debug("Success walk: ".. postostring(posWalk) )
+        lastPosWalk = posWalk
+      end
+    end
+
   end
 end
 

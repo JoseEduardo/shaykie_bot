@@ -19,9 +19,17 @@ Panel
     anchors.left: parent.left
     anchors.top: parent.top
 
+  BotOptionCheckBox
+    id: StartWayPoint
+    width: 120
+    !text: tr('Start waypoint')
+    !tooltip: tr('Enable waypoint')
+    anchors.left: prev.right
+    anchors.top: prev.top
+
   TextList
     id: PathList
-    anchors.top: AutoPath.bottom
+    anchors.top: StartWayPoint.bottom
     anchors.left: parent.left
     margin-bottom: 5
     margin-top: 8
