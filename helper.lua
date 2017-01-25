@@ -149,7 +149,7 @@ function Helper.getRandomVocationSpell(vocId, groups)
   return not table.empty(spells) and spells[math.random(1,#spells)] or {}
 end
 
-function Helper.startChooseItem(releaseCallback)
+function Helper.startChooseItem(releaseCallback, param)
   if not releaseCallback then
     error("No mouse release callback parameter set.")
   end
@@ -180,7 +180,7 @@ function Helper.startChooseItem(releaseCallback)
       end
     end
     
-    if releaseCallback(self, item) then
+    if releaseCallback(self, item, param) then
       -- revert mouse change
       g_mouse.popCursor()
       self:ungrabMouse()

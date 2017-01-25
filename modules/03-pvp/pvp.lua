@@ -12,9 +12,10 @@ local Panel = {
   --
 }
 
+setCurrType = 'PvE'
+
 local UI = {}
 local playerPush = {}
-local setCurrType = 'PvE'
 
 function PvpModule.getPanel() return Panel end
 function PvpModule.setPanel(panel) Panel = panel end
@@ -116,7 +117,8 @@ function PvpModule.moveAllFromStack(direction)
 end
 
 function PvpModule.bindHandlers()
-  g_keyboard.bindKeyPress('Ctrl+Shift+Q', function() PvpModule.changeSet(setCurrType) end)
+  g_keyboard.bindKeyPress('Ctrl+Shift+Q', function() PvpModule.changeSet('PvP') end)
+  g_keyboard.bindKeyPress('Ctrl+Shift+W', function() PvpModule.changeSet('PvE') end)
 
   g_keyboard.bindKeyPress('Shift+Numpad2', function() PvpModule.moveAllFromStack('SOUTH') end)
   g_keyboard.bindKeyPress('Shift+Numpad8', function() PvpModule.moveAllFromStack('NORTH')end)
@@ -233,10 +235,9 @@ function PvpModule.bindHandlers()
     onPositionChange = onMovePlayerDest
   })
 
-  connect(g_game, {
+  connect(ProtocolGame, {
     onAddThingInMap = onCreateItemMap
   })
-
 
   connect(LocalPlayer, {
    onHealthChange = activeManaShield
@@ -252,24 +253,50 @@ function PvpModule.changeSet(type)
     for _, inventSlot in ipairs(InventorySlotBot) do
       local currItemEquiped = player:getInventoryItem(inventSlot)
       if currItemEquiped then
-        g_game.move(, bpPos, currItemEquiped:getCount())
+        g_game.move(currItemEquiped, bpPos, currItemEquiped:getCount())
       end
 
-      local selectedItem = "Current"..type..""..InventorySlotStyles[inventSlot]
-      local item = player:getItem(selectedItem:setItemId())
+      local selectedItemName = "Current"..type..""..InventorySlotStyles[inventSlot]
+      local selectedItem = Panel:recursiveGetChildById(selectedItemName)
+      local item = player:getItem(selectedItem:getItemId())
       local invPos = {['x'] = 65535, ['y'] = inventSlot, ['z'] = 0}
       if item and not player:getInventoryItem(inventSlot) then
         g_game.move(item, invPos, item:getCount())
       end
     end
-
-    if setCurrType == 'PvE' then setCurrType = 'PvP' else setCurrType = 'PvE' end
   end
 end
 
-function PvpModule.onCreateItemMap(thing, pos)
+function onCreateItemMap(self, thing, pos)
   if thing:isItem() then
-    print(thing, pos)
+    --grav 2130
+    --m2   2129
+    local idItem = thing:getId()
+    local staticText = StaticText.create()
+    if idItem == 2130 then
+      staticText:setColor('#9F9DFD')
+      staticText:addMessage("", MessageModes.ChannelHighlight, "43")
+      scheduleEvent(function() addTimerMW(43, pos) end, 1000)
+    elseif idItem == 2129 then
+      staticText:setColor('#9F9DFD')
+      staticText:addMessage("", MessageModes.ChannelHighlight, "19")
+      scheduleEvent(function() addTimerMW(19, pos) end, 1000)
+    else
+      staticText:setColor('#5FF7F7')
+      staticText:addMessage("", MessageModes.ChannelHighlight, "O")
+    end
+    g_map.addThing(staticText, pos, -1)
+  end
+end
+
+function addTimerMW(timer, pos)
+  if timer >= 1 then
+    timer = timer-1
+    local staticText = StaticText.create()
+    staticText:setColor('#9F9DFD')
+    staticText:addMessage("", MessageModes.ChannelHighlight, timer)
+    g_map.addThing(staticText, pos, -1)
+    scheduleEvent(function() addTimerMW(timer, pos) end, 1000)
   end
 end
 
@@ -282,7 +309,7 @@ function PvpModule.terminate()
     onPositionChange = onMovePlayerDest
   })
 
-  disconnect(g_game, {
+  disconnect(ProtocolGame, {
     onAddThingInMap = onCreateItemMap
   })
 
@@ -373,8 +400,7 @@ end
 function PvpModule.equipeManaShieldRing()
  if g_game.isOnline() then
     local player = g_game.getLocalPlayer()
-    local selectedItem = 3052
-
+    local selectedItem = 3051
     local item = player:getItem(selectedItem)
     local slot = InventorySlotFinger
     
@@ -396,7 +422,7 @@ function PvpModule.removeManaShieldRing()
     
     local bpPos = {['x'] = 65535, ['y'] = 64, ['z'] = 0}
     if player:getInventoryItem(slot) then
-      g_game.move(player:getInventoryItem(slot), bpPos, item:getCount())
+      g_game.move(player:getInventoryItem(slot), bpPos, player:getInventoryItem(slot):getCount())
     end
   end
 end
@@ -407,15 +433,14 @@ function activeManaShield(player, health, maxHealth, oldHealth)
       PvpModule.equipeManaShieldRing()
     end
     if player:getHealthPercent() >= UI.HealthBarMax:getValue() then
-
+      PvpModule.removeManaShieldRing()
     end
   end
 end
 
-function PvpModule.onChooseItem(self, item)
+function PvpModule.onChooseItem(wdt, item, name)
   if item then
-    local name = 'CurrentHelmetPvPLeftHand'
-    local curItem = panel:recursiveGetChildById(name)
+    local curItem = Panel:recursiveGetChildById(name)
     curItem:setItemId(item:getId())
     ShaykieBot.changeOption(name, item:getId())
     ShaykieBot.show()

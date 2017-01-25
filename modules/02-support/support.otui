@@ -49,6 +49,41 @@ Panel
     minimum: 1
     maximum: 100
 
+  Label
+    id: HealthSpellLabelHeavy
+    width: 120
+    !text: tr('Spell text heavy:')
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 5
+
+  BotOptionLineEdit
+    id: HealSpellHeavyText
+    width: 100
+    anchors.left: parent.left
+    anchors.right: HealthSpellLabelHeavy.right
+    anchors.top: HealthSpellLabelHeavy.bottom
+    margin-top: 2
+
+  Label
+    id: HealthHeavyLabel
+    !text: tr('On health lower than:')
+    anchors.right: parent.right
+    anchors.top: HealthSpellLabelHeavy.top
+    margin-left: 18
+
+  BotOptionHorizontalScrollBar
+    id: HealthHeavyBar
+    width: 150
+    anchors.right: parent.right
+    anchors.top: HealthHeavyLabel.bottom
+    margin-top: 8
+    mouse-scroll: false
+    show-value: true
+    symbol: %
+    minimum: 1
+    maximum: 100
+
   HorizontalSeparator
     anchors.left: parent.left
     anchors.right: parent.right

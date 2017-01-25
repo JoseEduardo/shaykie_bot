@@ -61,6 +61,33 @@ function HudModule.addText(text, id, color)
     return label
 end
 
+function HudModule.addTextInPosition(text, id, color, pos)
+    label = g_ui.createWidget("HUDLabel", map)
+    if id then
+        label:setId(id)
+    else
+        label:setId(#HudModule.widgets)
+    end
+    if color then
+        if color == "red" then label:setColor("#FF0000") end
+        if color == "green" then label:setColor("#00FF00") end
+        if color == "blue" then label:setColor("#0000FF")end
+        if color == "blue1" then label:setColor("#00BFFF") end
+        if color == "yellow" then label:setColor("#FFFF00") end
+    end
+    label:setText(text)
+    label:setX(pos.x)
+    label:setY(pos.y)
+    if #HudModule.widgets > 0 then
+        label:addAnchor(AnchorTop, "prev", AnchorBottom)
+    end
+    label:hide()
+    label:show()
+    table.insert(HudModule.widgets, label)
+    return label
+end
+
+
 function HudModule.addItem(id, count)
     if not id then
         return

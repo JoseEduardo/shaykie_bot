@@ -20,9 +20,17 @@ function AutoHeal.onHealthChange(player, health, maxHealth, oldHealth, restoreTy
   if restoreType == RestoreType.cast then
     local spellText = Panel:getChildById('HealSpellText'):getText()
     local healthValue = Panel:getChildById('HealthBar'):getValue()
+
+    local spellHeavyText = Panel:getChildById('HealSpellHeavyText'):getText()
+    local healthHeavyValue = Panel:getChildById('HealthHeavyBar'):getValue()
     
     local delay = 0
-    if player:getHealthPercent() < healthValue then
+    if player:getHealthPercent() <= healthHeavyValue then
+      g_game.talk(spellHeavyText)
+      delay = Helper.getSpellDelay(spellHeavyText)
+    end
+
+    if player:getHealthPercent() <= healthValue then
       g_game.talk(spellText)
       delay = Helper.getSpellDelay(spellText)
     end

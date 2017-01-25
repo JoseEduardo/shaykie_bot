@@ -8,6 +8,16 @@ if(std::get<1>(result) != Otc::PathFindResultOk) {
     callLuaField("onAutoWalkFail", std::get<1>(result));
 
 
+
+Adicionar tbm no arquivo protocolGameParse.cpp
+apos a tag  g_map.addThing(thing, pos, stackPos);
+dentro do metodo
+void ProtocolGame::parseTileAddThing(const InputMessagePtr& msg)
+
+adicionar
+callLuaField("onAddThingInMap", thing, pos);
+
+----------------------------------------------------------------------------------------------
 SHIFT+NUMPAD Auto Push item and target player to mouse position, move localPlayer to position
 CTRL+1 Move all iten in player position to mouse position
 CTRL+2 Drop GP and Worm to PlayerPosition

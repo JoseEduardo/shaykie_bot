@@ -16,6 +16,9 @@ SupportModule.options = {
   ['HealSpellText'] = 'exura',
   ['HealthBar'] = 75,
 
+  ['HealSpellHeavyText'] = 'exura vita',
+  ['HealthHeavyBar'] = 75,
+
   ['AutoHealthItem'] = false,
   ['ItemHealthBar'] = 75,
   ['CurrentHealthItem'] = 266,

@@ -10,6 +10,19 @@ RestoreType = {
   item = 2
 }
 
+InventorySlotStyles = {
+  [InventorySlotHead] = "HeadSlot",
+  [InventorySlotNeck] = "NeckSlot",
+  [InventorySlotBack] = "BackSlot",
+  [InventorySlotBody] = "BodySlot",
+  [InventorySlotRight] = "RightSlot",
+  [InventorySlotLeft] = "LeftSlot",
+  [InventorySlotLeg] = "LegSlot",
+  [InventorySlotFeet] = "FeetSlot",
+  [InventorySlotFinger] = "FingerSlot",
+  [InventorySlotAmmo] = "AmmoSlot"
+}
+
 InventorySlotBot = {
   InventorySlotHead,
   InventorySlotBody,

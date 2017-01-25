@@ -134,11 +134,12 @@ Panel
   Button
     id: PvEHelmet
     !text: tr('Hel')
-    width: 70
-    height: 34
+    width: 36
+    height: 22
+    margin-left: -1
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem, 'CurrentPvEHeadSlot')
 
   Item
     id: CurrentPvEBodySlot
@@ -150,11 +151,12 @@ Panel
   Button
     id: PvEArmor
     !text: tr('Arm')
-    width: 70
-    height: 34
+    width: 36
+    height: 22
+    margin-left: -1
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem, 'CurrentPvEBodySlot')
 
   Item
     id: CurrentPvELegSlot
@@ -166,11 +168,12 @@ Panel
   Button
     id: PvELegs
     !text: tr('Leg')
-    width: 70
-    height: 34
+    width: 36
+    height: 22
+    margin-left: -1
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem, 'CurrentPvELegSlot')
 
   Item
     id: CurrentPvEFeetSlot
@@ -182,11 +185,12 @@ Panel
   Button
     id: PvEBoots
     !text: tr('Boo')
-    width: 70
-    height: 34
+    width: 36
+    height: 22
+    margin-left: -1
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem, 'CurrentPvEFeetSlot')
 
   Item
     id: CurrentPvELeftSlot
@@ -198,28 +202,29 @@ Panel
   Button
     id: PvELeftHand
     !text: tr('LHa')
-    width: 70
-    height: 34
+    width: 36
+    height: 22
+    margin-left: -1
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem, 'CurrentPvELeftSlot')
 
   Item
     id: CurrentPvERightSlot
-    anchors.left: SelectPvELeftHand.right
-    anchors.top: SelectPvELeftHand.top
+    anchors.left: CurrentPvELeftSlot.right
+    anchors.top: CurrentPvELeftSlot.top
     margin-left: 2
     virtual: true
 
   Button
     id: PvERightHand
     !text: tr('LHa')
-    width: 70
-    height: 34
+    width: 36
+    height: 22
+    margin-left: -1
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
-
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem, 'CurrentPvERightSlot')
 
   Item
     id: CurrentPvPHeadSlot
@@ -231,11 +236,12 @@ Panel
   Button
     id: PvPHelmet
     !text: tr('Hel')
-    width: 70
-    height: 34
+    width: 36
+    height: 22
+    margin-left: -1
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem, 'CurrentPvPHeadSlot')
 
   Item
     id: CurrentPvPBodySlot
@@ -247,11 +253,12 @@ Panel
   Button
     id: PvPArmor
     !text: tr('Arm')
-    width: 70
-    height: 34
+    width: 36
+    height: 22
+    margin-left: -1
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem, 'CurrentPvPBodySlot')
 
   Item
     id: CurrentPvPLegSlot
@@ -263,14 +270,15 @@ Panel
   Button
     id: PvPLegs
     !text: tr('Leg')
-    width: 70
-    height: 34
+    width: 36
+    height: 22
+    margin-left: -1
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem, 'CurrentPvPLegSlot')
 
   Item
-    id: CurrentPvEFeetSlot
+    id: CurrentPvPFeetSlot
     anchors.left: CurrentPvPLegSlot.right
     anchors.top: CurrentPvPLegSlot.top
     margin-left: 2
@@ -279,27 +287,29 @@ Panel
   Button
     id: PvPBoots
     !text: tr('Boo')
-    width: 70
-    height: 34
+    width: 36
+    height: 22
+    margin-left: -1
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem, 'CurrentPvPFeetSlot')
 
   Item
     id: CurrentPvPLeftSlot
-    anchors.left: CurrentPvEFeetSlot.right
-    anchors.top: CurrentPvEFeetSlot.top
+    anchors.left: CurrentPvPFeetSlot.right
+    anchors.top: CurrentPvPFeetSlot.top
     margin-left: 2
     virtual: true
 
   Button
     id: PvPLeftHand
     !text: tr('LHa')
-    width: 70
-    height: 34
+    width: 36
+    height: 22
+    margin-left: -1
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem, 'CurrentPvPLeftSlot')
 
   Item
     id: CurrentPvPRightSlot
@@ -311,8 +321,9 @@ Panel
   Button
     id: PvPRightHand
     !text: tr('LHa')
-    width: 70
-    height: 34
+    width: 36
+    height: 22
+    margin-left: -1
     anchors.left: prev.left
     anchors.top: prev.bottom
-    @onClick: Helper.startChooseItem(PvpModule.onChooseItem)
+    @onClick: Helper.startChooseItem(PvpModule.onChooseItem, 'CurrentPvPRightSlot')
