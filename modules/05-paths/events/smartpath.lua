@@ -41,33 +41,6 @@ function SmartPath.onStopped()
   
 end
 
-function getWalkPosByIndex(pos)
-  local index = 0;
-  local returnItem = nil;
-  local t = UI_Path.PathList:getChildren()
-
-  for i,v in ipairs(t) do
-    if index == pos then
-      returnItem = v.path
-      break
-    end
-    index = index+1;
-  end
-  
-  return returnItem
-end
-
-function countTablePath()
-  local count = 0
-  local t = UI_Path.PathList:getChildren()
-
-  for i,v in ipairs(t) do
-    count = count+1
-  end
-
-  return count
-end
-
 function SmartPath.checkPathing(dirs, override, dontChange)
   BotLogger.debug("SmartPath.checkPathing called")
 
@@ -124,12 +97,12 @@ function SmartPath.checkPathing(dirs, override, dontChange)
     end
   end
 
-  if countTablePath() > 0 then
-    if currIndex >= countTablePath()-1 then
+  if PathsModule.countTablePath() > 0 then
+    if currIndex >= PathsModule.countTablePath()-1 then
       currIndex = 0
     end
 
-    local currPath = getWalkPosByIndex(currIndex) 
+    local currPath = PathsModule.getWalkPosByIndex(currIndex) 
     local posWalk  = currPath.target
 
     if lastPosWalk ~= nil then
