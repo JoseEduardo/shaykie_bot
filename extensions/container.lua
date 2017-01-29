@@ -12,14 +12,31 @@ function Container:isOpen()
   return false
 end
 
+function Container.getContainerItems(self, ret)
+    ret = ret or {}
+    for index = self:getSize()-1, 0, -1 do
+        local item = self:getItem(index)
+        if ItemType(item:getId()):isContainer() then
+            ret[#ret+1] = item
+            item:getItems(ret)
+        else
+            ret[#ret+1] = item
+        end
+    end
+    return ret
+end
+
 function Container.GetByName(name)
-  for i, container in pairs(g_game.getContainers()) do
-    for j, item in pairs(container:getItems()) do
-      if item:getName() == name and item:isContainer() then
-        item.container = container
-        return item
-      end
+  local items = container:getItems()
+  for i = 1, #items do
+    if items[i]:getName() == name then
+      return items[i]
     end
   end
   return false
+end
+
+function Container:UseItem(slot)
+  local item = self:getItem(slot) 
+  g_game.use(item)
 end
