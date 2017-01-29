@@ -100,7 +100,7 @@ function LootModule.bindHandlers()
         return false
       end
 
-      if not string.find(container:getName(), 'dead') then
+      if not string.find(container:getName(), 'dead') and not string.find(container:getName(), 'slain')  then
         return false
       end
 

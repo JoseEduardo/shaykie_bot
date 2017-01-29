@@ -231,9 +231,10 @@ function PathsModule.updateCameraPosition()
     UI_Path.PathMap:setCrossPosition(player:getPosition())
   end
 
-  if Waypoint:isChecked() then
-    if pos == lastPosWalk or lastPosWalk == nil then
-      currIndexWaypoint += 1
+  if UI_Path.Waypoint:isChecked() then
+    if (pos.x == lastPosWalk.x and pos.y == lastPosWalk.y and pos.z == lastPosWalk.z)
+     or lastPosWalk == nil then
+      currIndexWaypoint = currIndexWaypoint+1
       PathsModule.processNextWaypoint()
     end
   end
@@ -274,13 +275,13 @@ function PathsModule.processNextWaypoint()
   end
 
   local player = g_game.getLocalPlayer()
-  if currIndexWaypoint >= countWP-1 then
+  if currIndexWaypoint > countWP-1 then
     currIndexWaypoint = 0
   end
 
   local currPath = PathsModule.getWalkPosByIndex(currIndexWaypoint)
   local posWalk  = currPath.target
-  
+
   if lastPosWalk ~= nil then
     PathsModule.removeMark(lastPosWalk)
   end
@@ -290,8 +291,8 @@ function PathsModule.processNextWaypoint()
     PathsModule.addMark(posWalk)
     if currPath.command ~= '' then
       Action.executeAction(currPath.command)
-      currIndexWaypoint += 1
-
+      currIndexWaypoint = currIndexWaypoint+1
+      lastPosWalk = posWalk
       PathsModule.processNextWaypoint()
     else
       if player:autoWalk( posWalk ) then
@@ -299,7 +300,6 @@ function PathsModule.processNextWaypoint()
         lastPosWalk = posWalk
       end
     end
-
   end
 end
 

@@ -16,7 +16,6 @@ function Player:getFlaskItems()
   return count
 end
 
---[[
 function Player:ShopSellAllItems(item)
     return self:ShopSellItem(item, self:ShopGetItemSaleCount(item))
 end
@@ -63,7 +62,7 @@ function Player:ShopGetItemSaleCount(item)
 end
 
 function Player:DepositMoney(amount)
-    delayWalker(3000)
+    --delayWalker(3000)
     
 	if (type(amount) == 'number') then
 		Player:SayToNpc({'hi', 'deposit ' .. math.max(amount, 1), 'yes'}, 70, 5)
@@ -72,7 +71,7 @@ function Player:DepositMoney(amount)
     end
 end
 function Player:WithdrawMoney(amount)
-    delayWalker(3000)
+    --delayWalker(3000)
     Player:SayToNpc({'hi', 'withdraw ' .. amount, 'yes'}, 70, 5)
 end
 
@@ -239,8 +238,25 @@ function Player:Equip(itemid, slot, count)
         cont = cont:GetNext()
     end
 end
+function Player:LookPos()
+    local direction = self:getDirection()
+    local playerPos = self:getPosition()
+
+    local steps = 1
+    if direction == '3' then
+        playerPos.x = playerPos.x - steps
+    elseif direction == '1' then
+        playerPos.x = playerPos.x + steps
+    elseif direction == '0' then
+        playerPos.y = playerPos.y - steps
+    elseif direction == '2' then
+        playerPos.y = playerPos.y + steps
+    end
+
+    return playerPos
+end
 function Player:OpenDepot()
-    delayWalker(5000)
+    --delayWalker(5000)
     local pos = Player:LookPos()
     local locker, depot = Container.GetByName("Locker"), Container.GetByName("Depot Chest")
     if (depot:isOpen()) then -- depot is already open
@@ -248,7 +264,7 @@ function Player:OpenDepot()
     end
     if (not locker:isOpen()) then -- locker isn't open
         repeat
-			wait(100)
+		wait(100)
 		until (Player:UseItemFromGround(pos.x, pos.y, pos.z) ~= 0)
         wait(1200, 1400)
         locker = Container.GetByName("Locker")
@@ -351,7 +367,7 @@ function Player:DepositItems(...)
         end
     end
     setBotEnabled(true)
-    delayWalker(2500)
+    --delayWalker(2500)
 end
 function Player:WithdrawItems(slot, ...)
     local function withdrawFromChildContainers(items, parent, slot)
@@ -419,7 +435,7 @@ function Player:WithdrawItems(slot, ...)
         withdrawFromChildContainers(items, depot, slot)
     end
     setBotEnabled(true)
-    delayWalker(2500)
+    --delayWalker(2500)
 end
 function Player:CloseContainers()
     for i = 0, 15 do
@@ -462,4 +478,3 @@ function Player:isAreaPvPSafe(radius, multiFloor, ignoreParty, ...)
     end
     return true
 end
-]]

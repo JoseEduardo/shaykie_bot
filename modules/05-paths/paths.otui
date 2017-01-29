@@ -26,6 +26,10 @@ Panel
     !tooltip: tr('Enable waypoint')
     anchors.left: prev.right
     anchors.top: prev.top
+    @onCheckChange: |
+      if self:isChecked() then
+        PathsModule.processNextWaypoint()
+      end
 
   TextList
     id: PathList
