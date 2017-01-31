@@ -239,45 +239,47 @@ function Player:Equip(itemid, slot, count)
     end
 end
 function Player:LookPos()
-    local direction = self:getDirection()
-    local playerPos = self:getPosition()
+    local player = g_game.getLocalPlayer()
+    local direction = player:getDirection()
+    local playerPos = player:getPosition()
 
     local steps = 1
-    if direction == '3' then
+    if direction == 3 then
         playerPos.x = playerPos.x - steps
-    elseif direction == '1' then
+    elseif direction == 1 then
         playerPos.x = playerPos.x + steps
-    elseif direction == '0' then
+    elseif direction == 0 then
         playerPos.y = playerPos.y - steps
-    elseif direction == '2' then
+    elseif direction == 2 then
         playerPos.y = playerPos.y + steps
     end
 
     return playerPos
 end
 function Player:OpenDepot()
-    --delayWalker(5000)
     local pos = Player:LookPos()
-    local locker, depot = Container.GetByName("Locker"), Container.GetByName("Depot Chest")
-    if (depot:isOpen()) then -- depot is already open
+    local locker = Container.GetByName("Locker")
+    local depot  = Container.GetByName("Depot Chest")
+    if depot then -- depot is already open
         return depot
     end
-    if (not locker:isOpen()) then -- locker isn't open
-        repeat
-		wait(100)
-		until (Player:UseItemFromGround(pos.x, pos.y, pos.z) ~= 0)
-        wait(1200, 1400)
+
+    if locker == false then -- locker isn't open
+        Player:UseItemFromGround(pos)
+    end
+    scheduleEvent( function()
         locker = Container.GetByName("Locker")
-    end
-    if (locker:isOpen()) then  -- if the locker opened successfully
-        locker:UseItem(0, true) -- open depot
-        wait(1000, 1400)
-        depot = Container.GetByName("Depot Chest")
-        if (depot:isOpen()) then  -- if the depot opened successfully
-            return depot
+        if locker then  -- if the locker opened successfully
+            locker:UseItem(0, true) -- open depot
+            depot = Container.GetByName("Depot Chest")
         end
-    end
+    end, 1000)
     return false
+end
+function Player:UseItemFromGround(pos)
+    local item = g_map.getThing(pos, 2)
+    g_game.look(item)
+    g_game.use(item)
 end
 function Player:DepositItems(...)
     local function depositToChildContainer(fromCont, fromSpot, parent, slot)
