@@ -38,6 +38,7 @@ end
 function Container.getContainerItemByName(name)
   local items = container:getItems()
   for i = 1, #items do
+    local idInTibia = Action.getIdByName(name)
     if items[i]:getId() == idInTibia then
       return items[i]
     end
