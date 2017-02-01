@@ -15,7 +15,7 @@ function Player:getFlaskItems()
   end
   return count
 end
-
+-- TODO
 function Player:ShopSellAllItems(item)
     return self:ShopSellItem(item, self:ShopGetItemSaleCount(item))
 end
@@ -32,6 +32,7 @@ function Player:ShopSellItem(item, count)
     until count <= 0
     return 1, 0
 end
+-- TODO
 function Player:ShopBuyItem(item, count)
     local func = (type(item) == "string") and shopBuyItemByName or shopBuyItemByID
     count = tonumber(count) or 1
@@ -45,6 +46,7 @@ function Player:ShopBuyItem(item, count)
     until count <= 0
     return 1, 0
 end
+-- TODO
 function Player:ShopBuyItemsUpTo(item, c)
     local count = c - self:ItemCount(item)
     if (count > 0) then
@@ -52,43 +54,48 @@ function Player:ShopBuyItemsUpTo(item, c)
     end
     return 0, 0
 end
+-- TODO
 function Player:ShopGetItemPurchasePrice(item)
     local func = (type(item) == "string") and shopGetItemBuyPriceByName or shopGetItemBuyPriceByID
     return func(item)
 end
+-- TODO
 function Player:ShopGetItemSaleCount(item)
     local func = (type(item) == "string") and shopGetItemSaleCountByName or shopGetItemSaleCountByID
     return func(item)
 end
-
+-- TEST
+function Player:SayToNpc(message, interval)
+    local contInc = 0
+    for _, msg in ipairs(message) do
+        contInc = contInc+(interval*1000)
+        scheduleEvent( function()
+            Action.talkNPC(msg)
+        end, contInc)
+    end    
+end
+-- TEST
 function Player:DepositMoney(amount)
-    --delayWalker(3000)
-    
 	if (type(amount) == 'number') then
-		Player:SayToNpc({'hi', 'deposit ' .. math.max(amount, 1), 'yes'}, 70, 5)
+		Player:SayToNpc({'hi', 'deposit ' .. math.max(amount, 1), 'yes'}, 7)
 	else
-		Player:SayToNpc({'hi', 'deposit all', 'yes'}, 70, 5)
+		Player:SayToNpc({'hi', 'deposit all', 'yes'}, 7)
     end
 end
+-- TEST
 function Player:WithdrawMoney(amount)
-    --delayWalker(3000)
-    Player:SayToNpc({'hi', 'withdraw ' .. amount, 'yes'}, 70, 5)
+    Player:SayToNpc({'hi', 'withdraw ' .. amount, 'yes'}, 7)
 end
-
+-- TEST
+function Player:UseItemFromEquipment(slot)
+    return self:getInventoryItem(slot)
+end
+-- TEST
 function Player:OpenMainBackpack(minimize)
-	repeat
-		wait(200)
-	until (Player:UseItemFromEquipment("backpack") > 0)
-	wait(1200)
-	
-	local ret = Container.GetFirst()
-	if (minimize == true) then
-		ret:Minimize()
-		wait(100)
-	end
-	return ret
+    local slot = InventorySlotFinger
+	return Player:UseItemFromEquipment(InventorySlotBack)
 end
-
+-- TODO
 function Player:Cast(words, mana)
     if(not mana or Player:Mana() >= mana)then
         return Player:CanCastSpell(words) and Player:Say(words) and wait(300) or 0
@@ -98,144 +105,98 @@ end
 function Player:DistanceFromPosition(x, y, z)
     return getDistanceBetween(Player:Position(), {x=x,y=y,z=z})
 end
-function Player:UseLever(x, y, z, itemid)	
+-- TEST
+function Player:UseLever(pos, itemid)	
 	local ret = 0
 	if (itemid == 0 or itemid == nil) then
 		repeat
 			wait(1500)
-		until (Player:UseItemFromGround(x, y, z) ~= 0 or Player:Position().z ~= z)
+		until (Player:UseItemFromGround(pos) ~= 0 or Player:Position().z ~= z)
 		return (Player:Position().z == z)
 	elseif (itemid > 99) then
-		local mapitem = Map.GetTopUseItem(x, y, z)
+		local mapitem = Map.GetTopUseItem(pos)
 		while (mapitem.id == itemid and Player:Position().z == z) do
-			Player:UseItemFromGround(x, y, z)
+			Player:UseItemFromGround(pos)
 			wait(1500)
-			mapitem = Map.GetTopUseItem(x, y, z)
+			mapitem = Map.GetTopUseItem(pos)
 		end
 		return (Player:Position().z == z)
 	end
 	return false
 end
-function Player:UseDoor(x, y, z, close)
+--TEST
+function Player:UseDoor(pos, close)
     close = close or false
-    if (not Map.IsTileWalkable(x, y, z) or close) then
-        local used = Player:UseItemFromGround(x, y, z)
+    if (not Map.IsTileWalkable(pos) or close) then
+        local used = Player:UseItemFromGround(pos)
         wait(1000, 1500)
-        return Map.IsTileWalkable(x, y, z) ~= close
+        return Map.IsTileWalkable(pos) ~= close
     end
 end
-function Player:CutGrass(x, y, z)
+-- TODO
+function Player:CutGrass(pos)
     local itemid = nil
     for _, id in ipairs({3308, 3330, 9594, 9596, 9598}) do
-        if(Player:ItemCount(id) >= 1)then
+        if(Player:getItemsCount(id) >= 1)then
             itemid = id
             break
         end
     end
     if(itemid)then -- we found a machete
-        local grass = Player:UseItemWithGround(itemid, x, y, z)
+        local grass = Player:UseItemWithGround(itemid, pos)
         wait(1500, 2000)
         return Map.IsTileWalkable(x, y, z)
     end
     return false
 end
-function Player:UsePick(x, y, z)
+function Player:UseItemWithGround(itemid, pos)
+    g_game.useWith(self:getItem(itemid), pos)
+end
+-- TEST
+function Player:UsePick(pos)
     local itemid = false
     for _, id in ipairs({3456, 9594, 9596, 9598}) do
-        if(Player:ItemCount(id) >= 1)then
+        if(Player:getItemsCount(id) >= 1)then
             itemid = id
             break
         end
     end
     if (itemid) then -- we found a pick
-        local hole = Player:UseItemWithGround(itemid, x, y, z)
+        local hole = Player:UseItemWithGround(itemid, pos)
         wait(1500, 2000)
         return Map.IsTileWalkable(x, y, z)
     end
     return false
 end
-function Player:DropItem(x, y, z, itemid, count)
-	itemid = Item.GetItemIDFromDualInput(itemid)
-    local cont = Container.GetFirst()
-    count = count or -1 -- either all or some
-    while (cont:isOpen() and (count > 0 or count == -1)) do
-        local offset = 0
-        for spot = 0, cont:ItemCount() do
-            local item = cont:GetItemData(spot - offset)
-            if (item.id == itemid) then
-                local compareCount = cont:CountItemsOfID(itemid) -- save the current count of this itemid to compare later
-                local toMove = math.min((count ~= -1) and count or 100, item.count) -- move either the count or the itemcount whichever is lower (if count is -1 then try 100)
-                cont:MoveItemToGround(spot - offset, x, y, z, toMove)
-                wait(600, 1000)
-                if (compareCount > cont:CountItemsOfID(itemid)) then -- previous count was higher, that means we were successful
-                    if(toMove == item.count)then -- if the full stack was moved, offset
-                        offset = offset + 1
-                    else
-                        return true -- only part of the stack was needed, we're done.
-                    end
-                    if (count ~= -1) then -- if there was a specified limit, we need to honor it.
-                        count = (count - toMove)
-                    end
-                end
-            end
+-- TEST
+function Player:DropItem(pos, itemid, count)
+    local items = self:getItems(itemId)
+    local countCtrl = 0;
+    for i=1,#items do
+        if countCtrl <= count then
+            g_game.move(items[i], toPos, items[i]:getCount())
+            countCtrl = countCtrl + items[i]:getCount()
         end
-        cont = cont:GetNext()
     end
 end
-function Player:DropItems(x, y, z, ...)
-	local items = Item.MakeDualInputTableIntoIDTable({...})
-    local cont = Container.GetFirst()
-    while (cont:isOpen()) do
-        local offset = 0
-        for spot = 0, cont:ItemCount() do
-            local item = cont:GetItemData(spot - offset)
-            if (table.contains(items, item.id)) then
-                local compareCount = cont:ItemCount() -- save this to compare the bp count to see if anything moved
-                cont:MoveItemToGround(spot - offset, x, y, z)
-                wait(500, 1000)
-                if (compareCount > cont:ItemCount()) then -- previous count is higher, that means item was moved successfully
-                    offset = offset + 1 -- moved item out, we need to recurse
-                end
-            end
-        end
-        cont = cont:GetNext()
+-- TEST
+function Player:DropItems(pos, ...)
+	local items = {...}
+    for i=1,#items do
+        self:DropItem(pos, items[i], items[i]:getCount())
     end
 end
-function Player:DropFlasks(x, y, z)
-    Player:DropItems(x, y, z, 283, 284, 285)
+-- TEST
+function Player:DropFlasks(pos)
+    Player:DropItems(pos, 283, 284, 285)
 end
+-- TEST
 function Player:Equip(itemid, slot, count)
-	itemid = Item.GetItemIDFromDualInput(itemid)
-    if not(table.contains(EQUIPMENT_SLOTS, slot))then
-        error(slot .. "' is not a valid slot.") return false
-    end
-    count = count or 1
-    local moveCount = 0
-    local cont = Container.GetFirst()
-    while (cont:isOpen()) do
-        local offset = 0
-        for spot = 0, cont:ItemCount() - 1 do
-            local item = cont:GetItemData(spot - offset)
-            if (itemid == item.id) then
-                local toMove = math.min(count-moveCount, item.count)
-                if (toMove + moveCount > count) then -- we will be going over the limit (just a failsafe)
-                    return true
-                end
-                local compareCount = cont:CountItemsOfID(item.id) -- save this to compare the bp count to see if anything moved
-                cont:MoveItemToEquipment(spot - offset, slot, toMove)
-                wait(500, 1000)
-                if (compareCount > cont:CountItemsOfID(item.id) and toMove == item.count) then -- previous count is higher, that means we have to offset back one or we will skip items
-                    if (toMove == item.count) then -- if the full stack was moved, offset
-                        offset = offset + 1
-                    else
-                        return true -- only part of the stack was needed, we're done.
-                    end
-                end
-                moveCount = moveCount + math.max(1, toMove) -- add up how many we've moved
-                if (moveCount >= count) then return true end
-            end
-        end
-        cont = cont:GetNext()
+    local item = salf:getItem(itemid)
+    
+    local handPos = {['x'] = 65535, ['y'] = slot, ['z'] = 0}
+    if item and not player:getInventoryItem(slot) then
+      g_game.move(item, handPos, item:getCount())
     end
 end
 function Player:LookPos()
@@ -279,8 +240,9 @@ end
 function Player:UseItemFromGround(pos)
     local item = g_map.getThing(pos, 2)
     g_game.look(item)
-    g_game.use(item)
+    return g_game.use(item)
 end
+-- TODO
 function Player:DepositItems(...)
     local function depositToChildContainer(fromCont, fromSpot, parent, slot)
         local bid = parent:GetItemData(slot).id
@@ -371,6 +333,7 @@ function Player:DepositItems(...)
     setBotEnabled(true)
     --delayWalker(2500)
 end
+-- TODO
 function Player:WithdrawItems(slot, ...)
     local function withdrawFromChildContainers(items, parent, slot)
         local bid = parent:GetItemData(slot).id
@@ -439,44 +402,10 @@ function Player:WithdrawItems(slot, ...)
     setBotEnabled(true)
     --delayWalker(2500)
 end
+-- TODO
 function Player:CloseContainers()
     for i = 0, 15 do
         closeContainer(i)
         wait(100)
     end
-end
-function Player:GetSpectators(multiFloor)
-    local tbl = {}
-    for i = CREATURES_LOW, CREATURES_HIGH do
-        local creature = Creature.GetFromIndex(i)
-        if(creature:isValid() and not creature:isSelf())then
-            if(creature:isOnScreen(multiFloor) and creature:isVisible() and creature:isAlive())then
-                table.insert(tbl, creature)
-            end
-        end
-    end
-    return tbl
-end
-function Player:GetTargets(distance)
-    local tbl = {}
-    local spectators = Player:GetSpectators()
-    for _, cid in ipairs(spectators) do
-        if(cid:DistanceFromSelf() <= distance and cid:isMonster())then
-            table.insert(tbl, cid)
-        end
-    end
-    return tbl
-end
-function Player:isAreaPvPSafe(radius, multiFloor, ignoreParty, ...)
-    local spectators = Player:GetSpectators(multiFloor)
-    for _, cid in ipairs(spectators) do
-        if(cid:DistanceFromSelf() <= radius and cid:isPlayer())then
-            if(not cid:isPartyMember() or not ignoreParty)then
-                if(not table.find({...}, cid:Name(), false))then
-                    return false
-                end
-            end
-        end
-    end
-    return true
 end

@@ -59,7 +59,6 @@ function Action.getIdByName(name)
   return idsTibia[name]
 end
 
--- TODO - PRECISA ARRUMAR POIS TEM QUE ACEITAR UM RANDOM TBM
 function wait(s)
   local ntime = os.time() + s
   repeat until os.time() > ntime
