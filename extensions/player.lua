@@ -15,42 +15,25 @@ function Player:getFlaskItems()
   end
   return count
 end
--- TODO
-function Player:ShopSellAllItems(item)
-    return self:ShopSellItem(item, self:ShopGetItemSaleCount(item))
+--[[ SELL ]]
+-- TEST
+function Player:ShopSellAllItems(itemId)
+    local count = self:getItemsCount(itemId)
+    return g_game.sellItem(itemId, count, ignoreEquipped)
 end
-function Player:ShopSellItem(item, count)
-    local func = (type(item) == "string") and shopSellItemByName or shopSellItemByID
-    count = tonumber(count) or 1
-    repeat
-        local amnt = math.min(count, 100)
-        if (func(item, amnt) == 0) then
-            return 0, amnt
-        end
-        wait(300, 600)
-        count = (count - amnt)
-    until count <= 0
-    return 1, 0
+function Player:ShopSellItem(itemId, count, ignoreEquipped)
+    return g_game.sellItem(itemId, count, ignoreEquipped)
 end
--- TODO
-function Player:ShopBuyItem(item, count)
-    local func = (type(item) == "string") and shopBuyItemByName or shopBuyItemByID
-    count = tonumber(count) or 1
-    repeat
-        local amnt = math.min(count, 100)
-        if (func(item, amnt) == 0) then
-            return 0, amnt
-        end
-        wait(300,600)
-        count = (count - amnt)
-    until count <= 0
-    return 1, 0
+--[[ BUY ]]
+-- TEST
+function Player:ShopBuyItem(itemId, amount, ignoreCapacity, buyWithBackpack)
+    return g_game.buyItem(itemId, amount, ignoreCapacity, buyWithBackpack)
 end
--- TODO
-function Player:ShopBuyItemsUpTo(item, c)
-    local count = c - self:ItemCount(item)
+-- TEST
+function Player:ShopBuyItemsUpTo(item, c, ignoreCapacity, buyWithBackpack)
+    local count = c - self:getItemsCount(item)
     if (count > 0) then
-        return self:ShopBuyItem(item, count)
+        return self:ShopBuyItem(item, count, ignoreCapacity, buyWithBackpack)
     end
     return 0, 0
 end
@@ -133,7 +116,7 @@ function Player:UseDoor(pos, close)
         return Map.IsTileWalkable(pos) ~= close
     end
 end
--- TODO
+-- TEST
 function Player:CutGrass(pos)
     local itemid = nil
     for _, id in ipairs({3308, 3330, 9594, 9596, 9598}) do
@@ -402,10 +385,9 @@ function Player:WithdrawItems(slot, ...)
     setBotEnabled(true)
     --delayWalker(2500)
 end
--- TODO
+-- TEST
 function Player:CloseContainers()
-    for i = 0, 15 do
-        closeContainer(i)
-        wait(100)
+    for _,container in pairs(g_game.getContainers()) do
+        g_game.close(container)
     end
 end
