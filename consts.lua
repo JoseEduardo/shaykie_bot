@@ -458,3 +458,7 @@ ItensToBuy = {
   [224] = {ID = 7388, PRICE = 30000},
   [225] = {ID = 3342, PRICE = 12000}
 }
+
+idsTibia ={
+  ['Locker'] = 0000
+}

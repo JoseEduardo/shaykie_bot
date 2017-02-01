@@ -18,7 +18,7 @@ function Container.getItems(self, ret)
     local item = self:getItem(index)
     if item:isContainer() == true then
       ret[#ret+1] = item
-      --Container.getItems(item, ret)
+      Container.getItems(item, ret)
     else
       ret[#ret+1] = item
     end
@@ -30,6 +30,16 @@ function Container.GetByName(name)
   for _,container in pairs(g_game.getContainers()) do
     if string.lower(container:getName()) == string.lower(name) then
       return container
+    end
+  end
+  return false
+end
+
+function Container.getContainerItemByName(name)
+  local items = container:getItems()
+  for i = 1, #items do
+    if items[i]:getId() == idInTibia then
+      return items[i]
     end
   end
   return false

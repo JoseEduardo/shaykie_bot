@@ -54,3 +54,7 @@ end
 function Action.loadPath(file)
   PathsModule.loadPaths(file, true)
 end
+
+function Action.getIdByName(name)
+  return idsTibia[name]
+end
