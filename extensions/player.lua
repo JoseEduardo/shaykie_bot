@@ -198,14 +198,17 @@ function Player:OpenDepot()
     if locker == false then -- locker isn't open
         Player:UseItemFromGround(pos)
     end
+    depot = nil
     scheduleEvent( function()
         locker = Container.GetByName("Locker")
         if locker then  -- if the locker opened successfully
             locker:UseItem(0, true) -- open depot
-            depot = Container.GetByName("Depot Chest")
         end
     end, 1000)
-    return false
+    while depot == nil do
+        depot = Container.GetByName("Depot Chest")
+    end
+    return depot
 end
 function Player:UseItemFromGround(pos)
     local item = nil
@@ -217,14 +220,24 @@ function Player:UseItemFromGround(pos)
     g_game.look(item)
     return g_game.use(item)
 end
--- TODO
+-- TEST
 function Player:DepositItems(...)
     local items = {...}
     for i=1,#items do
+        local itemId  = items[i][0]
+        local depotId = items[i][1]
+        local qty     = items[i][2]
 
+        local item = self:getItem(itemId)
+        if qty > item:getCount() then
+            qty = item:getCount()
+        end
+        local depot = self:OpenDepot()
+        depot.y = depotId
+        g_game.move(item, depot, qty)
     end
 end
--- TODO
+-- -- DREPRECATED
 function Player:DepositItems2(...)
     local function depositToChildContainer(fromCont, fromSpot, parent, slot)
         local bid = parent:GetItemData(slot).id
