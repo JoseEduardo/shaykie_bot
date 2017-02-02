@@ -19,15 +19,17 @@ end
 -- TEST
 function Player:ShopSellAllItems(itemId)
     local count = self:getItemsCount(itemId)
-    return g_game.sellItem(itemId, count, ignoreEquipped)
+    return Player:ShopSellItem(itemId, count, true)
 end
 function Player:ShopSellItem(itemId, count, ignoreEquipped)
-    return g_game.sellItem(itemId, count, ignoreEquipped)
+    local item = self:getItem(itemId)
+    return g_game.sellItem(item, count, ignoreEquipped)
 end
 --[[ BUY ]]
 -- TEST
 function Player:ShopBuyItem(itemId, amount, ignoreCapacity, buyWithBackpack)
-    return g_game.buyItem(itemId, amount, ignoreCapacity, buyWithBackpack)
+    local item = self:getItem(itemId)
+    return g_game.buyItem(item, amount, ignoreCapacity, buyWithBackpack)
 end
 -- TEST
 function Player:ShopBuyItemsUpTo(item, c, ignoreCapacity, buyWithBackpack)
@@ -47,7 +49,6 @@ function Player:ShopGetItemSaleCount(item)
     local func = (type(item) == "string") and shopGetItemSaleCountByName or shopGetItemSaleCountByID
     return func(item)
 end
--- TEST
 function Player:SayToNpc(message, interval)
     local contInc = 0
     for _, msg in ipairs(message) do
@@ -57,25 +58,24 @@ function Player:SayToNpc(message, interval)
         end, contInc)
     end    
 end
--- TEST
 function Player:DepositMoney(amount)
 	if (type(amount) == 'number') then
-		Player:SayToNpc({'hi', 'deposit ' .. math.max(amount, 1), 'yes'}, 7)
+		Player:SayToNpc({'hi', 'deposit ' .. math.max(amount, 1), 'yes'}, 2)
 	else
-		Player:SayToNpc({'hi', 'deposit all', 'yes'}, 7)
+		Player:SayToNpc({'hi', 'deposit all', 'yes'}, 2)
     end
 end
--- TEST
 function Player:WithdrawMoney(amount)
-    Player:SayToNpc({'hi', 'withdraw ' .. amount, 'yes'}, 7)
+    Player:SayToNpc({'hi', 'withdraw ' .. amount, 'yes'}, 2)
 end
--- TEST
 function Player:UseItemFromEquipment(slot)
-    return self:getInventoryItem(slot)
+    local player = g_game.getLocalPlayer()
+    local item = player:getInventoryItem(slot)
+    return g_game.use(item)
 end
--- TEST
+
 function Player:OpenMainBackpack(minimize)
-    local slot = InventorySlotFinger
+    local slot = InventorySlotBack
 	return Player:UseItemFromEquipment(InventorySlotBack)
 end
 -- TODO
@@ -84,36 +84,20 @@ function Player:Cast(words, mana)
         return Player:CanCastSpell(words) and Player:Say(words) and wait(300) or 0
     end
 end
-
-function Player:DistanceFromPosition(x, y, z)
-    return getDistanceBetween(Player:Position(), {x=x,y=y,z=z})
+function Player:DistanceFromPosition(pos)
+    return Position.distance(player:getPosition(), pos)
 end
--- TEST
-function Player:UseLever(pos, itemid)	
-	local ret = 0
-	if (itemid == 0 or itemid == nil) then
-		repeat
-			wait(1500)
-		until (Player:UseItemFromGround(pos) ~= 0 or Player:Position().z ~= z)
-		return (Player:Position().z == z)
-	elseif (itemid > 99) then
-		local mapitem = Map.GetTopUseItem(pos)
-		while (mapitem.id == itemid and Player:Position().z == z) do
-			Player:UseItemFromGround(pos)
-			wait(1500)
-			mapitem = Map.GetTopUseItem(pos)
-		end
-		return (Player:Position().z == z)
-	end
-	return false
+function Player:UseLever(pos, itemid)
+	return Player:UseItemFromGround(pos)
 end
---TEST
 function Player:UseDoor(pos, close)
-    close = close or false
-    if (not Map.IsTileWalkable(pos) or close) then
-        local used = Player:UseItemFromGround(pos)
-        wait(1000, 1500)
-        return Map.IsTileWalkable(pos) ~= close
+    if not close then
+        local tile = g_map.getThing(pos, 0)
+        if tile:isWalkable() then
+            Player:UseItemFromGround(pos)
+        end
+    else
+        Player:UseItemFromGround(pos)
     end
 end
 -- TEST
@@ -221,7 +205,12 @@ function Player:OpenDepot()
     return false
 end
 function Player:UseItemFromGround(pos)
-    local item = g_map.getThing(pos, 2)
+    local item = nil
+    local topStack = 255
+    while item == nil do
+        item = g_map.getThing(pos, topStack)
+        topStack = topStack-1
+    end
     g_game.look(item)
     return g_game.use(item)
 end
@@ -385,7 +374,6 @@ function Player:WithdrawItems(slot, ...)
     setBotEnabled(true)
     --delayWalker(2500)
 end
--- TEST
 function Player:CloseContainers()
     for _,container in pairs(g_game.getContainers()) do
         g_game.close(container)
