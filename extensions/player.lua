@@ -91,27 +91,30 @@ function Player:UseLever(pos, itemid)
 	return Player:UseItemFromGround(pos)
 end
 function Player:UseDoor(pos, close)
+    local tileWalk = Map.IsTileWalkable()
     if not close then
-        local tile = g_map.getThing(pos, 0)
-        if tile:isWalkable() then
+        --local tile = g_map.getThing(pos, 0)
+        --if tile:isWalkable() then
+        if tileWalk then
             Player:UseItemFromGround(pos)
         end
     else
-        Player:UseItemFromGround(pos)
+        if not tileWalk then
+            Player:UseItemFromGround(pos)
+        end
     end
 end
 -- TEST
 function Player:CutGrass(pos)
     local itemid = nil
     for _, id in ipairs({3308, 3330, 9594, 9596, 9598}) do
-        if(Player:getItemsCount(id) >= 1)then
+        if Player:getItemsCount(id) >= 1 then
             itemid = id
             break
         end
     end
-    if(itemid)then -- we found a machete
+    if itemid then -- we found a machete
         local grass = Player:UseItemWithGround(itemid, pos)
-        wait(1500, 2000)
         return Map.IsTileWalkable(x, y, z)
     end
     return false
@@ -216,6 +219,13 @@ function Player:UseItemFromGround(pos)
 end
 -- TODO
 function Player:DepositItems(...)
+    local items = {...}
+    for i=1,#items do
+
+    end
+end
+-- TODO
+function Player:DepositItems2(...)
     local function depositToChildContainer(fromCont, fromSpot, parent, slot)
         local bid = parent:GetItemData(slot).id
         if(Item.isContainer(bid))then -- valid container
