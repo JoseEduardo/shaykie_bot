@@ -12,6 +12,26 @@ function Container:isOpen()
   return false
 end
 
+function Container.getItemsById(self, id, ret)
+  ret = ret or {}
+  for index = self:getSize()-1, 0, -1 do
+    local item = self:getItem(index)
+    if item ~= nil then
+      if item:isContainer() == true then
+        if item:getId() == id then
+          ret[#ret+1] = item
+        end
+        Container.getItemsById(item, id, ret)
+      else
+        if item:getId() == id then
+          ret[#ret+1] = item
+        end
+      end
+    end
+  end
+  return ret
+end
+
 function Container.getItems(self, ret)
   ret = ret or {}
   for index = self:getSize()-1, 0, -1 do
@@ -36,7 +56,7 @@ function Container.GetByName(name)
 end
 
 function Container.getContainerItemByName(name)
-  local items = container:getItems()
+  local items = self:getItems()
   for i = 1, #items do
     local idInTibia = Action.getIdByName(name)
     if items[i]:getId() == idInTibia then

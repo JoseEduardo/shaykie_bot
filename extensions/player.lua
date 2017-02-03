@@ -91,10 +91,9 @@ function Player:UseLever(pos, itemid)
 	return Player:UseItemFromGround(pos)
 end
 function Player:UseDoor(pos, close)
-    local tileWalk = Map.IsTileWalkable()
-    if not close then
-        --local tile = g_map.getThing(pos, 0)
-        --if tile:isWalkable() then
+    local tile = g_map.getTile(pos)
+    local tileWalk = tile:isWalkable()
+    if close then
         if tileWalk then
             Player:UseItemFromGround(pos)
         end
@@ -210,6 +209,27 @@ function Player:OpenDepot()
     end
     return depot
 end
+--TEST
+function Player:OpenDepotBox(number)
+    local roman = Helper.ToRomanNumerals(number)
+    local depotBox  = Container.GetByName("Depot Box "..roman)
+    if depotBox then -- depot is already open
+        return depotBox
+    end
+
+    depotBox = nil
+    scheduleEvent( function()
+        depot = Container.GetByName("Depot Chest")
+        if depot then  -- if the locker opened successfully
+            depot:UseItem(number-1, true) -- open depot
+        end
+    end, 1000)
+
+    while depotBox == nil do
+        depotBox = Container.GetByName("Depot Box "..roman)
+    end
+    return depotBox
+end
 function Player:UseItemFromGround(pos)
     local item = nil
     local topStack = 255
@@ -220,116 +240,49 @@ function Player:UseItemFromGround(pos)
     g_game.look(item)
     return g_game.use(item)
 end
--- TEST
+-- Player:DepositItems({3035,1,1},{3031,1,1},{3043,1,1})
 function Player:DepositItems(...)
     local items = {...}
+    local player = g_game.getLocalPlayer()
     for i=1,#items do
-        local itemId  = items[i][0]
-        local depotId = items[i][1]
-        local qty     = items[i][2]
+        local itemId  = items[i][1]
+        local depotId = items[i][2]
+        local qty     = items[i][3]
 
-        local item = self:getItem(itemId)
+        local item = player:getItem(itemId)
         if qty > item:getCount() then
             qty = item:getCount()
         end
-        local depot = self:OpenDepot()
-        depot.y = depotId
-        g_game.move(item, depot, qty)
+        local depot = Player:OpenDepot()
+        local depotPosition = depot:getSlotPosition()
+
+        depotPosition.z = depotId+1
+        g_game.move(item, depotPosition, qty)
     end
 end
--- -- DREPRECATED
-function Player:DepositItems2(...)
-    local function depositToChildContainer(fromCont, fromSpot, parent, slot)
-        local bid = parent:GetItemData(slot).id
-        if(Item.isContainer(bid))then -- valid container
-            parent:UseItem(slot, true) -- open backpack on the slot
-            wait(500, 900)
-            local child = Container.GetLast() -- get the child opened backpack
-            if(child:ID() == bid)then -- the child bp id matches the itemid clicked; failsafe
-                local bic = child:ItemCount()
-                if(child:ItemCapacity() == bic)then -- backpack is full, even closer
-                    local fic = fromCont:ItemCount()
-                    fromCont:MoveItemToContainer(fromSpot, child:Index(), bic - 1)
-                    wait(500, 900)
-                    if(fic > fromCont:ItemCount())then -- item moved successfully
-                        return {child:Index(), bic - 1}
-                    else -- failed to move, recurse further
-                        return depositToChildContainer(fromCont, fromSpot, child, bic - 1)
-                    end
-                end
-            end
-        end
-        return false
-    end
+-- Player:WithdrawItems('Backpack', {3031,1,1})
+function Player:WithdrawItems(slot, ...)
+    local items = {...}
+    local player = g_game.getLocalPlayer()
+    for i=1,#items do
+        local itemId  = items[i][1]
+        local boxID   = items[i][2]
+        local qty     = items[i][3]
 
-    setBotEnabled(false) -- turn off walker/looter/targeter
-
-    local indexes = Container.GetIndexes() -- store open indexes so we only loop through backpacks we had open before we started depositing
-    local depot = Player:OpenDepot()
-    if (depot) then -- did we open depot?
-		local items = {}
-		for i = 1, #arg do
-			local data = arg[i]
-			newitem = {}
-			if (type(data) == 'table') then
-				newitem[1] = Item.GetItemIDFromDualInput(data[1])
-				newitem[2] = data[2]
-			else
-				newitem[1] = Item.GetItemIDFromDualInput(data)
-				newitem[2] = 0
-			end
-			items[i] = newitem
-		end
-    
-        local bp = Container.GetFirst()
-        local children = {}
-        while(bp:isOpen())do
-            if table.contains(indexes, bp:Index())then
-                local name = bp:Name()
-                if(name ~= "Locker") and (name ~= "Depot Chest")then
-                    local offset = 0
-                    for spot = 0, bp:ItemCount() - 1 do -- loop through all the items in loot backpack
-                        local item = bp:GetItemData(spot - offset)
-                        local data = table.contains(items, item.id, 1)
-                        if (data) then -- the item is in the deposit list
-                            local slot = data[2] -- which depot slot to deposit to
-                            local depositCont, depositSlot = depot, slot
-                            local child = children[slot + 1]
-                            if(child)then -- we have already recursed to a child for this slot
-                                depositCont, depositSlot = Container.GetFromIndex(child[1]), child[2]
-                            elseif(not Container.GetByName("Depot Chest"):isOpen())then -- this slot has not been recursed AND depot is closed :(
-                                local reopen = Player:OpenDepot() -- try to reopen depot
-                                if(reopen)then -- if successful
-                                    depot = reopen -- register our new depot =D
-                                    depositCont = depot -- pass to our move function
-                                end
-                            end
-                            local bpc = bp:ItemCount()
-                            bp:MoveItemToContainer(spot - offset, depositCont:Index(), depositSlot)
-                            wait(600, 1500)
-                            if(bpc > bp:ItemCount())then -- item moved successfully
-                                offset = offset + 1 -- we took an item out, the ones afterwards will shift back one
-                            else -- item did not move succesfully
-                                local cont = depositToChildContainer(bp, spot - offset, depositCont, depositSlot) -- try to move in child containers
-                                if(cont)then -- deposited item successfully
-                                    children[slot + 1] = cont
-                                    offset = offset + 1 -- we took an item out, the ones afterwards will shift back one
-                                else
-                                    children[slot + 1] = nil
-                                end
-                            end
-                        end
-                    end
-                end
+        local depotBox = Player:OpenDepotBox(boxID)
+        local slotDest = Container.GetByName(slot)
+        print(itemId)
+        local itemInDepot = depotBox:getItemsById(itemId)
+        for x=1,#itemInDepot do
+            if qty > itemInDepot[x]:getCount() then
+                qty = itemInDepot[x]:getCount()
             end
-            bp = bp:GetNext() -- next backpack
+            g_game.move(itemInDepot[x], slotDest:getSlotPosition(), qty)
         end
     end
-    setBotEnabled(true)
-    --delayWalker(2500)
 end
 -- TODO
-function Player:WithdrawItems(slot, ...)
+function Player:WithdrawItems2(slot, ...)
     local function withdrawFromChildContainers(items, parent, slot)
         local bid = parent:GetItemData(slot).id
         if (#items > 0) and (Item.isContainer(bid)) then
