@@ -130,20 +130,19 @@ function LootModule.bindHandlers()
 end
 
 function LootModule.processLoot(itemsBP, freePush)
-    local toPos = {x=65535, y=64, z=math.random(0,7)}
     for k,i in pairs(itemsBP) do
       if freePush then
-        --LootModule.moveItemToBP(i, toPos, i:getCount())
+        local toPos = {x=65535, y=64, z=math.random(0,7)}
         scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, math.random(1000, 3000))
       else
         local checkItem = LootProcedure:checkLootList(i:getId())
-        if checkItem then
-          local posBP = checkItem:getBp()
-          if posBP ~= '' or type(posBP) == "number" then
-            toPos.y = toPos.y-tonumber(posBP)
+        if checkItem and checkItem:getBp() ~= '' then
+          local backCurr = Container.GetByName(checkItem:getBp())
+          if backCurr then
+            local toPos = backCurr:getSlotPosition()
+            toPos.z = backCurr:getCapacity()-1
+            scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, math.random(1000, 3000))
           end
-          --LootModule.moveItemToBP(i, toPos, i:getCount())
-          scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, math.random(1000, 3000))
         end
       end
     end
