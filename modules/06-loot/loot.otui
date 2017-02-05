@@ -118,7 +118,7 @@ Panel
         local ItemID = parent:getChildById('ItemID')
         local ItemCap = parent:getChildById('ItemCap')
         local ItemBp = parent:getChildById('ItemBp')
-        TargetsModule.addLootItem(ItemID:getText(), "", ItemCap:getText(), ItemBp:getText())
+        LootModule.addLootItem(ItemID:getText(), "", ItemCap:getText(), ItemBp:getText())
 
   HorizontalSeparator
     anchors.left: parent.left

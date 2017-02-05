@@ -235,7 +235,7 @@ function PathsModule.updateCameraPosition()
     if (pos.x == lastPosWalk.x and pos.y == lastPosWalk.y and pos.z == lastPosWalk.z)
      or lastPosWalk == nil then
       currIndexWaypoint = currIndexWaypoint+1
-      PathsModule.processNextWaypoint()
+      scheduleEvent(function() PathsModule.processNextWaypoint() end, 1000)
     end
   end
 end

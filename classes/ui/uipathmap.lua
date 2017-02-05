@@ -102,7 +102,9 @@ function UIPathMap:onMouseRelease(pos, button)
     return true
   elseif button == MouseRightButton then
     local menu = g_ui.createWidget('PopupMenu')
-    menu:addOption(tr('Create mark'), function() self:createFlagWindow(mapPos) end)
+    menu:addOption(tr('Add Path'), function()
+     PathsModule.createPath(mapPos)
+    end)
     menu:display(pos)
     return true
   end

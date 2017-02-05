@@ -116,7 +116,7 @@ function LootModule.bindHandlers()
 
   modules.game_interface.addMenuHook("lootbot", tr("Add to Loot List"), 
     function(menuPosition, lookThing, useThing, creatureThing)
-      TargetsModule.addLootItem(useThing:getId(), "", 100, 0)
+      LootModule.addLootItem(useThing:getId(), "", 100, "Backpack")
     end,
     function(menuPosition, lookThing, useThing, creatureThing)
       return useThing ~= nil and useThing:isItem() ~= nil
@@ -133,7 +133,8 @@ function LootModule.processLoot(itemsBP, freePush)
     for k,i in pairs(itemsBP) do
       if freePush then
         local toPos = {x=65535, y=64, z=math.random(0,7)}
-        scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, math.random(1000, 3000))
+        --scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, math.random(1000, 1200))
+        LootModule.moveItemToBP(i, toPos, i:getCount());
       else
         local checkItem = LootProcedure:checkLootList(i:getId())
         if checkItem and checkItem:getBp() ~= '' then
@@ -141,7 +142,7 @@ function LootModule.processLoot(itemsBP, freePush)
           if backCurr then
             local toPos = backCurr:getSlotPosition()
             toPos.z = backCurr:getCapacity()-1
-            scheduleEvent(function() LootModule.moveItemToBP(i, toPos, i:getCount()) end, math.random(1000, 3000))
+            LootModule.moveItemToBP(i, toPos, i:getCount());
           end
         end
       end
@@ -207,7 +208,7 @@ function LootModule.checkIDForLoot(idItem)
   return false
 end
 
-function TargetsModule.addLootItem(id, name, cap, bp)
+function LootModule.addLootItem(id, name, cap, bp)
   local loot = Loot.create(id, id, cap, bp)
   LootModule.addItemToLoot(loot)
   return loot
