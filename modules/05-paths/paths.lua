@@ -97,6 +97,7 @@ function PathsModule.createPath(posToWalk)
   local path = Path.create()
   path:setTarget(posToWalk)
   path:setCommand("")
+  path:setLabel('node')
   path:setName(os.clock())
 
   PathsModule.addToPathList(path);
@@ -141,6 +142,7 @@ function PathsModule.loadUI(panel)
     LoadButton = panel:recursiveGetChildById('LoadButton'),
     Minimap = panel:recursiveGetChildById('PathMap'),
     TextAction = panel:recursiveGetChildById('actionText'),
+    TextLabel = panel:recursiveGetChildById('LabelDesc'),
     Waypoint = panel:recursiveGetChildById('StartWayPoint')
   }
 
@@ -268,6 +270,40 @@ function PathsModule.getWalkPosByIndex(pos)
   return returnItem
 end
 
+function PathsModule.getWalkPosByLabel(label)
+  local returnItem = nil;
+  local t = UI_Path.PathList:getChildren()
+
+  for i,v in ipairs(t) do
+    local ptmp = v.path
+    if ptmp.label == label then
+      returnItem = v.path
+      break
+    end
+  end
+  
+  return returnItem
+end
+
+function PathsModule.getWalkPosIndexByLabel(label)
+  local index = 0;
+  local t = UI_Path.PathList:getChildren()
+
+  for i,v in ipairs(t) do
+    local ptmp = v.path
+    if ptmp.label == label then
+      break
+    end
+    index = index+1;
+  end
+  
+  return index
+end
+
+function PathsModule.changeCurrentWaypointIndex(index)
+  currIndexWaypoint = index
+end
+
 function PathsModule.processNextWaypoint()
   local countWP = PathsModule.countTablePath()
   if countWP <= 0 then
@@ -296,7 +332,7 @@ function PathsModule.processNextWaypoint()
       PathsModule.processNextWaypoint()
     else
       if player:autoWalk( posWalk ) then
-        BotLogger.debug("Success walk: ".. postostring(posWalk) )
+        BotLogger.debug("Success walk: "..currPath.label.." - ".. postostring(posWalk) )
         lastPosWalk = posWalk
       end
     end
@@ -351,10 +387,19 @@ function PathsModule.bindHandlers()
     end
   })
 
+ connect(UI_Path.TextLabel, {
+    onTextChange = function(self, text, oldText)
+      if selectedPath then
+        selectedPath:setLabel(text)
+      end
+    end
+  })
+
 end
 
 function PathsModule.setCurrentPath(pathSelected)
   UI_Path.TextAction:setText(pathSelected:getCommand(), true)
+  UI_Path.TextLabel:setText(pathSelected:getLabel(), true)
 end
 
 function PathsModule.getPaths(name)

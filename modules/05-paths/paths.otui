@@ -67,9 +67,23 @@ Panel
       width: 0
 
   Label
+    id: LblDesc
+    !text: tr('Label')
+    anchors.top: PathListScrollBar.top
+    anchors.left: PathListScrollBar.left
+    margin-left: 15
+
+  TextEdit
+    id: LabelDesc
+    anchors.top: prev.bottom
+    anchors.left: PathListScrollBar.right
+    anchors.right: parent.right
+    width: 70
+
+  Label
     id: actionLabel
     !text: tr('Action')
-    anchors.top: PathListScrollBar.top
+    anchors.top: prev.bottom
     anchors.left: PathListScrollBar.left
     margin-left: 15
 

@@ -8,12 +8,13 @@ end
 
 Path = extends(CandyConfig, "Path")
 
-Path.create = function(target, command, name)
+Path.create = function(target, command, name, label)
   local path = Path.internalCreate()
 
   path.nodes = {}
   path.target = target or {}
   path.command = command or ""
+  path.label = label or "node"
   path.name = name or "new"
 
   return path
@@ -31,6 +32,19 @@ function Path:setName(name)
     self.name = name
 
     signalcall(self.onNameChange, self, name, oldName)
+  end
+end
+
+function Path:getLabel()
+  return self.label
+end
+
+function Path:setLabel(label)
+  local oldLabel = self.label
+  if label ~= oldLabel then
+    self.label = label
+
+    signalcall(self.onLabelChange, self, label, oldLabel)
   end
 end
 

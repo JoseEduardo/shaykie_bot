@@ -51,6 +51,11 @@ function Action.getIdByName(name)
   return idsTibia[name]
 end
 
+function Action.gotoLabel(label)
+  local wayIndex = PathsModule.getWalkPosIndexByLabel(label)
+  PathsModule.changeCurrentWaypointIndex(wayIndex)
+end
+
 function wait(s)
   local ntime = os.time() + s
   repeat until os.time() > ntime
