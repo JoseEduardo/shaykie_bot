@@ -93,6 +93,16 @@ function PathsModule.init()
   SmartPath.init()
 end
 
+function PathsModule.createPathComplete(posToWalk, label, command)
+  local path = Path.create()
+  path:setTarget(posToWalk)
+  path:setCommand(command)
+  path:setLabel(label)
+  path:setName(os.clock())
+
+  PathsModule.addToPathList(path);
+end
+
 function PathsModule.createPath(posToWalk)
   local path = Path.create()
   path:setTarget(posToWalk)

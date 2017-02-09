@@ -282,8 +282,8 @@ function onCreateItemMap(self, thing, pos)
       staticText:addMessage("", MessageModes.ChannelHighlight, "19")
       scheduleEvent(function() addTimerMW(19, pos) end, 1000)
     else
-      staticText:setColor('#5FF7F7')
-      staticText:addMessage("", MessageModes.ChannelHighlight, "O")
+      staticText:setColor('#FE6500')
+      staticText:addMessage("", MessageModes.MonsterSay, "O")
     end
     g_map.addThing(staticText, pos, -1)
   end
