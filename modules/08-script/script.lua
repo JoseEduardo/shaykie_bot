@@ -116,27 +116,26 @@ end
 function ScriptModule.loadPaths(tableXml)
     --http://www.ufjf.br/lapic/files/2010/06/Tutorial_Lua_XML_Parser.pdf
     local position = {}
-    while x <= #tableXml.root.panel do
-        if tableXml.root.panel[x]._attr.name == 'Walker' then
-            while i <= #tableXml.root.panel[x].control.item do
-                local item = tableXml.root.panel[x].control.item[i]._attr.text
-                print(item)
+    for i,v in ipairs(tableXml.root.panel) do
+        if v._attr.name == 'Walker' then
+            for x,item in ipairs(v.control.item) do
+                item = item._attr.text
                 if string.find(item, 'Stand') or string.find(item, 'Node') then
-                    position = item:match("%((%a+)%)")
-                    position = position:trim()
-                    position = position:explode(',')
+                    item = item:gsub("%(", '')
+                    item = item:gsub("%)", '')
+                    item = item:gsub("Stand ", '')
+                    item = item:gsub("Node ", '')
+                    item = item:gsub(" ", '')
+                    position = item:explode(',')
 
                     PathsModule.createPathWithLabel(position, 'node', '')
                 else
                     PathsModule.createPathWithLabel(position, item, item)
                 end
-                i = i + 1
             end
-            x = #tableXml.root.panel+1
-        else
-            x = x+1;
         end
     end
+
 end
 
 function ScriptModule.loadSupport(tableXml)
@@ -145,16 +144,14 @@ end
 
 function ScriptModule.loadScript(file, force)
     BotLogger.debug("ScriptModule.loadScript("..file..")")
-    local path = scriptsDir.."/"..file
+    local FILE_NAME = scriptsDir.."/"..file
 
     local loadFunc = function()
-        local filename = path
-        local xmltext = ""
-        local f, e = io.open(filename, "r")
+        local tableXml = simpleTreeHandler()
+
+        local f, e = io.open(FILE_NAME, "r")
         if f then
-            xmltext = f:read("*a")
-        
-            --Instancia o objeto que faz a conversao de XML para uma table lua
+            local xmltext = f:read("*a")
             local xmlparser = xmlParser(tableXml)
             xmlparser:parse(xmltext)
 
